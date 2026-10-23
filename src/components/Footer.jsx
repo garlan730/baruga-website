@@ -16,7 +16,7 @@ export default function Footer() {
         <div>
           <img src="/img/logo-white.png" alt="Baruga Medical Center" className="footer-logo" />
           <p className="footer-tagline">
-            {t({ id: 'Kedokteran gigi spesialis dan layanan dokter umum, dengan perhatian penuh.', en: 'Specialist dentistry and general practice, thoughtfully delivered.' })}
+            {t({ id: 'Klinik gigi spesialis dan dokter umum di Makassar, melayani dengan sepenuh hati.', en: 'Specialist dentistry and general practice in Makassar, with genuine care.' })}
           </p>
         </div>
         <div>
@@ -44,7 +44,7 @@ export default function Footer() {
         <span>© {new Date().getFullYear()} {CLINIC.name}</span>
         <span>
           {t({
-            id: 'Informasi di situs ini bersifat edukatif dan tidak menggantikan konsultasi langsung dengan dokter.',
+            id: 'Informasi di situs ini hanya untuk edukasi dan tidak menggantikan pemeriksaan langsung oleh dokter.',
             en: 'Information on this site is educational and does not replace an in-person consultation.',
           })}
         </span>

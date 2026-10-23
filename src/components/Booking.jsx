@@ -105,7 +105,7 @@ export default function Booking() {
     e.preventDefault()
     if (!ready) return
     const lines = [
-      t({ id: 'Halo Baruga Medical Center, saya ingin membuat janji:', en: 'Hello Baruga Medical Center, I would like to book an appointment:' }),
+      t({ id: 'Halo Baruga Medical Center, saya mau buat janji:', en: 'Hello Baruga Medical Center, I would like to book an appointment:' }),
       '',
       `${t({ id: 'Layanan', en: 'Service' })}: ${t(svc.title)}`,
       doctor ? `${t({ id: 'Dokter', en: 'Doctor' })}: ${doctor}` : null,
@@ -123,8 +123,8 @@ export default function Booking() {
         <SectionHead
           center
           label={{ id: 'Buat Janji', en: 'Book an Appointment' }}
-          title={{ id: 'Pilih layanan dan jadwal Anda.', en: 'Choose your service and time.' }}
-          text={{ id: 'Isi dalam satu menit. Permintaan dikirim lewat WhatsApp, lalu tim kami mengonfirmasi jadwal Anda.', en: 'Takes a minute. Your request is sent via WhatsApp and our team will confirm your appointment.' }}
+          title={{ id: 'Atur jadwal kunjungan Anda.', en: 'Schedule your visit.' }}
+          text={{ id: 'Cukup satu menit. Setelah dikirim lewat WhatsApp, tim kami akan membalas untuk konfirmasi jadwal.', en: 'Takes a minute. Your request is sent via WhatsApp and our team will confirm your appointment.' }}
         />
 
         <Reveal as="form" className="bk-grid" onSubmit={submit}>
@@ -178,7 +178,7 @@ export default function Booking() {
                   ))}
                 </div>
               ) : (
-                <p className="bk-hint">{t({ id: 'Pilih tanggal untuk melihat jam yang tersedia.', en: 'Choose a date to see available times.' })}</p>
+                <p className="bk-hint">{t({ id: 'Pilih tanggal dulu, lalu jamnya.', en: 'Choose a date to see available times.' })}</p>
               )}
             </Step>
 
@@ -228,8 +228,8 @@ export default function Booking() {
               </button>
               <p className="bk-note">
                 {ready
-                  ? t({ id: 'Jadwal dikonfirmasi oleh tim kami melalui WhatsApp.', en: 'Our team will confirm your appointment on WhatsApp.' })
-                  : `${t({ id: 'Lengkapi', en: 'Still needed' })}: ${missing.join(', ')}.`}
+                  ? t({ id: 'Tim kami akan membalas di WhatsApp untuk konfirmasi jadwal.', en: 'Our team will confirm your appointment on WhatsApp.' })
+                  : `${t({ id: 'Belum diisi', en: 'Still needed' })}: ${missing.join(', ')}.`}
               </p>
             </div>
 
