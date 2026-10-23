@@ -376,11 +376,19 @@ button { font: inherit; }
 .doctor-image.placeholder { display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 3rem; color: var(--taupe); }
 .doctor-card h4 { font-family: var(--font-serif); font-size: 1.18rem; font-weight: 500; line-height: 1.3; margin-bottom: 4px; }
 .doctor-group { display: block; font-family: var(--font-ui); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); margin-bottom: 4px; }
-.gp-doctor { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: center; margin-top: 60px; padding-top: 50px; border-top: 1px solid var(--beige); }
+/* Same columns as .doctors-grid so the GP photo is exactly one doctor-card wide. */
+.gp-doctor { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 28px; align-items: center; margin-top: 60px; padding-top: 50px; border-top: 1px solid var(--beige); }
 .gp-doctor .doctor-image { margin: 0; }
+.gp-doctor > div { grid-column: 2 / -1; padding-left: 12px; }
 .gp-doctor h4 { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 500; margin-bottom: 10px; }
 .gp-doctor p { color: var(--text-medium); max-width: 560px; margin-bottom: 18px; }
-@media (max-width: 700px) { .gp-doctor { grid-template-columns: 120px 1fr; gap: 20px; align-items: start; } .gp-doctor h4 { font-size: 1.3rem; } .gp-doctor p { font-size: 0.9rem; } }
+@media (max-width: 1000px) { .gp-doctor { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) {
+  .gp-doctor { grid-template-columns: repeat(2, 1fr); column-gap: 16px; align-items: start; }
+  .gp-doctor > div { padding-left: 0; }
+  .gp-doctor h4 { font-size: 1.3rem; }
+  .gp-doctor p { font-size: 0.9rem; }
+}
 @media (max-width: 1000px) { .doctors-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 700px) { .doctors-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 16px; } .doctor-card h4 { font-size: 1.02rem; } }
 
