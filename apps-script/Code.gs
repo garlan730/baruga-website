@@ -10,7 +10,7 @@
  * request on WhatsApp. Events are marked "(belum dikonfirmasi)" until staff edit them.
  */
 
-const CALENDAR_ID = 'primary' // or a dedicated calendar's ID, e.g. "Booking Website"
+const CALENDAR_ID = 'primary' // or a calendar ID, e.g. 'admin@barugamedicalcenter.com' when deployed from another account
 const TZ = 'Asia/Makassar'
 const OPEN_DAYS = [1, 2, 3, 4, 5, 6] // Mon–Sat, keep in sync with SCHEDULE in src/config.js
 const START_HOUR = 17
