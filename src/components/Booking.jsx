@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { activePromo, CLINIC, HOURS, SCHEDULE, SERVICES, waLink } from '../config.js'
+import { activePromo, BOOKING_API_URL, CLINIC, HOURS, SCHEDULE, SERVICES, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Reveal, SectionHead } from './ui.jsx'
 import { WhatsAppIcon } from './WhatsAppFloat.jsx'
@@ -36,6 +36,19 @@ function upcomingDays(count = 14) {
     d.setDate(d.getDate() + 1)
   }
   return days
+}
+
+// Fire-and-forget copy to the clinic calendar. Apps Script needs a "simple" request
+// (text/plain, no-cors); the script runs even though the response can't be read.
+function saveToCalendar(booking) {
+  if (!BOOKING_API_URL) return
+  fetch(BOOKING_API_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    keepalive: true,
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(booking),
+  }).catch(() => {})
 }
 
 export default function Booking() {
@@ -74,7 +87,17 @@ export default function Booking() {
       `${t({ id: 'Jadwal', en: 'Time' })}: ${dayLabel(date)}, ${form.time} WITA`,
       showPromo && usePromo ? `${t({ id: 'Promo', en: 'Promo' })}: ${t(promo.value)} ${t(promo.title)}` : null,
     ].filter((l) => l !== null)
+    // Open WhatsApp first, straight from the click, so popup blockers allow it.
     window.open(waLink(lines.join('\n')), '_blank', 'noopener')
+    saveToCalendar({
+      service: svc.key,
+      serviceLabel: svc.title.id,
+      name: form.name.trim(),
+      phone: form.phone.trim(),
+      date: form.date,
+      time: form.time,
+      promo: showPromo && usePromo ? `${promo.value.id} ${promo.title.id}` : '',
+    })
   }
 
   return (
