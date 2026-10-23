@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CLINIC, DOCTOR_GROUPS, HOURS, waLink } from '../config.js'
+import { activePromo, CLINIC, DOCTOR_GROUPS, HOURS, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
@@ -168,8 +168,35 @@ const FAQ = [
   },
 ]
 
+function PromoCard({ promo }) {
+  const { t, lang } = useLang()
+  const end = new Date(`${promo.end}T23:59:59+08:00`)
+  const daysLeft = Math.max(0, Math.ceil((end - new Date()) / 86400000))
+  const endLabel = end.toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-GB', { day: 'numeric', month: 'long', timeZone: 'Asia/Makassar' })
+  return (
+    <aside className="promo-card">
+      <span className="promo-tag">{t(promo.tag)}</span>
+      <p className="promo-value">{t(promo.value)}</p>
+      <p className="promo-title">{t(promo.title)}</p>
+      <p className="promo-perk">{t(promo.perk)}</p>
+      <p className="promo-deadline">
+        {t({ id: `Berlaku sampai ${endLabel}`, en: `Valid until ${endLabel}` })}
+        {daysLeft <= 14 && <strong> · {t({ id: `tinggal ${daysLeft} hari`, en: `${daysLeft} days left` })}</strong>}
+      </p>
+      <Link to={`/?layanan=${promo.service}&promo=1#contact`} className="btn btn-light promo-cta">
+        {t({ id: 'Ambil Promo', en: 'Claim Offer' })}
+      </Link>
+      <p className="promo-terms">
+        {t(promo.terms)}{' '}
+        {promo.detailsUrl && <a href={promo.detailsUrl} target="_blank" rel="noreferrer">{t({ id: 'Lihat detail', en: 'See details' })}</a>}
+      </p>
+    </aside>
+  )
+}
+
 function Hero() {
   const { t } = useLang()
+  const promo = activePromo()
   return (
     <section className="hero">
       <div className="hero-overlay" />
@@ -196,17 +223,24 @@ function Hero() {
             {t({ id: 'Vaksin Meningitis & Polio untuk Umroh/Haji + ICV', en: 'Meningitis & Polio vaccines for Umrah/Hajj + ICV' })}
             <span aria-hidden="true">→</span>
           </Link>
+          {promo && (
+            <p className="hero-hours">
+              {t({ id: 'Buka', en: 'Open' })} {t(HOURS[0].days)}, {HOURS[0].time} · {CLINIC.addressLines[0]}
+            </p>
+          )}
         </div>
-        <aside className="hero-card">
-          <span className="section-label">{t({ id: 'Jam Praktik', en: 'Opening Hours' })}</span>
-          {HOURS.map((h, i) => (
-            <div key={i} className="hours-row">
-              <span>{t(h.days)}</span>
-              <strong>{t(h.time)}</strong>
-            </div>
-          ))}
-          <p className="hero-card-addr">{CLINIC.addressLines[0]}, Makassar</p>
-        </aside>
+        {promo ? <PromoCard promo={promo} /> : (
+          <aside className="hero-card">
+            <span className="section-label">{t({ id: 'Jam Praktik', en: 'Opening Hours' })}</span>
+            {HOURS.map((h, i) => (
+              <div key={i} className="hours-row">
+                <span>{t(h.days)}</span>
+                <strong>{t(h.time)}</strong>
+              </div>
+            ))}
+            <p className="hero-card-addr">{CLINIC.addressLines[0]}, Makassar</p>
+          </aside>
+        )}
       </div>
     </section>
   )

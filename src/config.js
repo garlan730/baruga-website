@@ -20,6 +20,26 @@ export const HOURS = [
   { days: { id: 'Minggu & libur nasional', en: 'Sun & public holidays' }, time: { id: 'Tutup', en: 'Closed' } },
 ]
 
+// Current promotion shown in the hero. It disappears automatically after `end` (inclusive,
+// clinic date); set PROMO to null to hide it. Mirrors the campaign at promo.barugamedicalcenter.com.
+export const PROMO = {
+  start: '2026-10-23',
+  end: '2026-11-22',
+  service: 'ortho', // booking option the promo button preselects
+  tag: { id: 'Promo Terbatas', en: 'Limited Offer' },
+  value: { id: 'Diskon 20%', en: '20% Off' },
+  title: { id: 'Perawatan Behel (Ortodonti)', en: 'Orthodontic Treatment (Braces)' },
+  perk: { id: 'Plus konsultasi awal GRATIS untuk ortodonti & prostodonti.', en: 'Plus a FREE first consultation for orthodontics & prosthodontics.' },
+  terms: { id: 'Syarat & ketentuan berlaku. Kuota terbatas.', en: 'Terms apply. Limited slots.' },
+  detailsUrl: 'https://promo.barugamedicalcenter.com/',
+}
+
+export function activePromo(now = new Date()) {
+  if (!PROMO) return null
+  const today = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Makassar' })
+  return today >= PROMO.start && today <= PROMO.end ? PROMO : null
+}
+
 export const waLink = (message = '') =>
   `https://wa.me/${CLINIC.whatsapp}${message ? `?text=${encodeURIComponent(message)}` : ''}`
 

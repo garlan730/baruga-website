@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { CLINIC, DOCTOR_GROUPS, HOURS, SCHEDULE, SERVICES, waLink } from '../config.js'
+import { activePromo, CLINIC, HOURS, SCHEDULE, SERVICES, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Reveal, SectionHead } from './ui.jsx'
 import { WhatsAppIcon } from './WhatsAppFloat.jsx'
@@ -32,228 +32,135 @@ function upcomingDays(count = 14) {
   const d = new Date()
   d.setHours(0, 0, 0, 0)
   while (days.length < count) {
-    const iso = isoDate(d)
-    if (SCHEDULE.openDays.includes(d.getDay()) && slotsFor(iso).length) days.push(new Date(d))
+    if (SCHEDULE.openDays.includes(d.getDay()) && slotsFor(isoDate(d)).length) days.push(new Date(d))
     d.setDate(d.getDate() + 1)
   }
   return days
 }
 
-function Step({ n, title, children, done }) {
-  return (
-    <div className={`bk-step${done ? ' done' : ''}`}>
-      <div className="bk-step-head">
-        <span className="bk-step-num">{done ? '✓' : n}</span>
-        <h4>{title}</h4>
-      </div>
-      {children}
-    </div>
-  )
-}
-
 export default function Booking() {
   const { t, lang } = useLang()
   const [params] = useSearchParams()
-  const [service, setService] = useState('')
-  const [doctor, setDoctor] = useState('')
-  const [date, setDate] = useState('')
-  const [time, setTime] = useState('')
-  const [form, setForm] = useState({ name: '', phone: '', notes: '' })
+  const promo = activePromo()
+  const [form, setForm] = useState({ service: '', name: '', phone: '', date: '', time: '' })
+  const [usePromo, setUsePromo] = useState(false)
+  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
-  // Links like /?layanan=ortho#contact preselect a service.
+  // Links like /?layanan=ortho&promo=1#contact preselect a service (and the promo).
   const fromUrl = params.get('layanan')
+  const promoFromUrl = params.get('promo') === '1'
   useEffect(() => {
-    if (fromUrl && SERVICES.some((s) => s.key === fromUrl)) {
-      setService(fromUrl)
-      setDoctor('')
-    }
-  }, [fromUrl])
+    if (fromUrl && SERVICES.some((s) => s.key === fromUrl)) setForm((f) => ({ ...f, service: fromUrl }))
+    if (promoFromUrl) setUsePromo(true)
+  }, [fromUrl, promoFromUrl])
 
   const days = useMemo(() => upcomingDays(), [])
-  const slots = date ? slotsFor(date) : []
-  const svc = SERVICES.find((s) => s.key === service)
-  const group = DOCTOR_GROUPS.find((g) => g.service === svc?.group)
-  const doctors = group?.doctors ?? []
-
+  const slots = form.date ? slotsFor(form.date) : []
   const locale = lang === 'id' ? 'id-ID' : 'en-GB'
-  const fmtDay = (d) => ({
-    dow: d.toLocaleDateString(locale, { weekday: 'short' }),
-    day: d.getDate(),
-    mon: d.toLocaleDateString(locale, { month: 'short' }),
-  })
-  const longDate = date
-    ? new Date(`${date}T00:00`).toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-    : ''
-
-  const pickService = (key) => {
-    setService(key)
-    setDoctor('')
-  }
-  const pickDate = (iso) => {
-    setDate(iso)
-    if (!slotsFor(iso).includes(time)) setTime('')
-  }
-
-  const missing = [
-    !service && t({ id: 'layanan', en: 'service' }),
-    (!date || !time) && t({ id: 'jadwal', en: 'time' }),
-    (!form.name.trim() || !form.phone.trim()) && t({ id: 'nama & nomor WhatsApp', en: 'name & WhatsApp number' }),
-  ].filter(Boolean)
-  const ready = missing.length === 0
+  const dayLabel = (d) => d.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })
+  const svc = SERVICES.find((s) => s.key === form.service)
+  const showPromo = promo && (form.service === promo.service || usePromo)
 
   const submit = (e) => {
     e.preventDefault()
-    if (!ready) return
+    if (!svc) return
+    const date = days.find((d) => isoDate(d) === form.date)
     const lines = [
       t({ id: 'Halo Baruga Medical Center, saya mau buat janji:', en: 'Hello Baruga Medical Center, I would like to book an appointment:' }),
       '',
-      `${t({ id: 'Layanan', en: 'Service' })}: ${t(svc.title)}`,
-      doctor ? `${t({ id: 'Dokter', en: 'Doctor' })}: ${doctor}` : null,
-      `${t({ id: 'Jadwal', en: 'Time' })}: ${longDate}, ${time} WITA`,
       `${t({ id: 'Nama', en: 'Name' })}: ${form.name.trim()}`,
       `${t({ id: 'No. WhatsApp', en: 'WhatsApp' })}: ${form.phone.trim()}`,
-      form.notes.trim() ? `${t({ id: 'Keluhan/catatan', en: 'Notes' })}: ${form.notes.trim()}` : null,
+      `${t({ id: 'Layanan', en: 'Service' })}: ${t(svc.title)}`,
+      `${t({ id: 'Jadwal', en: 'Time' })}: ${dayLabel(date)}, ${form.time} WITA`,
+      showPromo && usePromo ? `${t({ id: 'Promo', en: 'Promo' })}: ${t(promo.value)} ${t(promo.title)}` : null,
     ].filter((l) => l !== null)
     window.open(waLink(lines.join('\n')), '_blank', 'noopener')
   }
 
   return (
     <section className="booking-section" id="contact">
-      <div className="container">
-        <SectionHead
-          center
-          label={{ id: 'Buat Janji', en: 'Book an Appointment' }}
-          title={{ id: 'Atur jadwal kunjungan Anda.', en: 'Schedule your visit.' }}
-          text={{ id: 'Cukup satu menit. Setelah dikirim lewat WhatsApp, tim kami akan membalas untuk konfirmasi jadwal.', en: 'Takes a minute. Your request is sent via WhatsApp and our team will confirm your appointment.' }}
-        />
+      <div className="container bk-wrap">
+        <div className="bk-intro">
+          <SectionHead
+            label={{ id: 'Buat Janji', en: 'Book an Appointment' }}
+            title={{ id: 'Atur jadwal kunjungan Anda.', en: 'Schedule your visit.' }}
+            text={{ id: 'Isi formulir singkat ini, lalu kirim lewat WhatsApp. Tim kami akan membalas untuk konfirmasi jadwal.', en: 'Fill in this short form and send it via WhatsApp. Our team will reply to confirm.' }}
+          />
+          <div className="bk-contact">
+            <div>
+              <h5>{t({ id: 'Alamat', en: 'Address' })}</h5>
+              <a href={CLINIC.mapsUrl} target="_blank" rel="noreferrer">
+                {CLINIC.addressLines.map((l) => <span key={l}>{l}<br /></span>)}
+              </a>
+            </div>
+            <div>
+              <h5>{t({ id: 'Jam Praktik', en: 'Opening Hours' })}</h5>
+              {HOURS.map((h, i) => <p key={i}>{t(h.days)}: {t(h.time)}</p>)}
+            </div>
+            <div>
+              <h5>{t({ id: 'Telepon & WhatsApp', en: 'Phone & WhatsApp' })}</h5>
+              <a href={`tel:${CLINIC.phone}`}>{CLINIC.phoneDisplay}</a>
+            </div>
+            <div>
+              <h5>Email</h5>
+              <a href={`mailto:${CLINIC.email}`}>{CLINIC.email}</a>
+            </div>
+          </div>
+        </div>
 
-        <Reveal as="form" className="bk-grid" onSubmit={submit}>
-          <div className="bk-main">
-            <Step n={1} title={t({ id: 'Pilih layanan', en: 'Choose a service' })} done={!!service}>
-              <div className="bk-services">
-                {SERVICES.map((s) => (
-                  <button type="button" key={s.key} className={`bk-service${service === s.key ? ' active' : ''}`} onClick={() => pickService(s.key)} aria-pressed={service === s.key}>
-                    <strong>{t(s.title)}</strong>
-                    <span>{t(s.hint)}</span>
-                  </button>
-                ))}
-              </div>
-              {doctors.length > 1 && (
-                <div className="bk-doctors">
-                  <span className="bk-sub">{t({ id: 'Dokter (opsional)', en: 'Doctor (optional)' })}</span>
-                  <div className="bk-chips">
-                    <button type="button" className={`bk-chip${!doctor ? ' active' : ''}`} onClick={() => setDoctor('')}>
-                      {t({ id: 'Siapa saja', en: 'Any available' })}
-                    </button>
-                    {doctors.map((d) => (
-                      <button type="button" key={d.name} className={`bk-chip${doctor === d.name ? ' active' : ''}`} onClick={() => setDoctor(d.name)}>
-                        {d.name.replace(/,.*$/, '')}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </Step>
+        <Reveal as="form" className="bk-card" onSubmit={submit}>
+          <fieldset className="bk-field">
+            <legend>{t({ id: 'Mau perawatan apa?', en: 'What do you need?' })}</legend>
+            <div className="bk-chips">
+              {SERVICES.map((s) => (
+                <label key={s.key} className={`bk-chip${form.service === s.key ? ' active' : ''}`}>
+                  <input type="radio" name="service" value={s.key} checked={form.service === s.key} onChange={set('service')} required />
+                  {t(s.title)}
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
-            <Step n={2} title={t({ id: 'Pilih jadwal', en: 'Pick a time' })} done={!!date && !!time}>
-              <div className="bk-days" role="listbox" aria-label={t({ id: 'Tanggal', en: 'Date' })}>
-                {days.map((d) => {
-                  const iso = isoDate(d)
-                  const f = fmtDay(d)
-                  return (
-                    <button type="button" key={iso} role="option" aria-selected={date === iso} className={`bk-day${date === iso ? ' active' : ''}`} onClick={() => pickDate(iso)}>
-                      <span>{f.dow}</span>
-                      <strong>{f.day}</strong>
-                      <span>{f.mon}</span>
-                    </button>
-                  )
-                })}
-              </div>
-              {date ? (
-                <div className="bk-slots">
-                  {slots.map((s) => (
-                    <button type="button" key={s} className={`bk-chip${time === s ? ' active' : ''}`} onClick={() => setTime(s)}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <p className="bk-hint">{t({ id: 'Pilih tanggal dulu, lalu jamnya.', en: 'Choose a date to see available times.' })}</p>
-              )}
-            </Step>
+          {showPromo && (
+            <label className="bk-promo">
+              <input type="checkbox" checked={usePromo} onChange={(e) => setUsePromo(e.target.checked)} />
+              <span>
+                <strong>{t(promo.value)} {t(promo.title)}</strong> — {t({ id: 'gunakan promo ini', en: 'apply this offer' })}
+              </span>
+            </label>
+          )}
 
-            <Step n={3} title={t({ id: 'Data Anda', en: 'Your details' })} done={!!form.name.trim() && !!form.phone.trim()}>
-              <div className="bk-fields">
-                <label>
-                  {t({ id: 'Nama lengkap', en: 'Full name' })}
-                  <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoComplete="name" />
-                </label>
-                <label>
-                  {t({ id: 'No. WhatsApp', en: 'WhatsApp number' })}
-                  <input required type="tel" inputMode="tel" placeholder="08xx" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} autoComplete="tel" />
-                </label>
-                <label className="span-2">
-                  {t({ id: 'Keluhan atau catatan (opsional)', en: 'Concerns or notes (optional)' })}
-                  <textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
-                </label>
-              </div>
-            </Step>
+          <div className="bk-row">
+            <label>
+              {t({ id: 'Nama', en: 'Name' })}
+              <input required value={form.name} onChange={set('name')} autoComplete="name" />
+            </label>
+            <label>
+              {t({ id: 'No. WhatsApp', en: 'WhatsApp number' })}
+              <input required type="tel" inputMode="tel" placeholder="08xx" value={form.phone} onChange={set('phone')} autoComplete="tel" />
+            </label>
+          </div>
+          <div className="bk-row">
+            <label>
+              {t({ id: 'Tanggal', en: 'Date' })}
+              <select required value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value, time: slotsFor(e.target.value).includes(f.time) ? f.time : '' }))}>
+                <option value="">{t({ id: 'Pilih tanggal', en: 'Choose a date' })}</option>
+                {days.map((d) => <option key={isoDate(d)} value={isoDate(d)}>{dayLabel(d)}</option>)}
+              </select>
+            </label>
+            <label>
+              {t({ id: 'Jam', en: 'Time' })}
+              <select required value={form.time} onChange={set('time')} disabled={!form.date}>
+                <option value="">{form.date ? t({ id: 'Pilih jam', en: 'Choose a time' }) : t({ id: 'Pilih tanggal dulu', en: 'Choose a date first' })}</option>
+                {slots.map((s) => <option key={s} value={s}>{s} WITA</option>)}
+              </select>
+            </label>
           </div>
 
-          <aside className="bk-side">
-            <div className="bk-summary">
-              <span className="section-label light">{t({ id: 'Ringkasan', en: 'Summary' })}</span>
-              <dl>
-                <div>
-                  <dt>{t({ id: 'Layanan', en: 'Service' })}</dt>
-                  <dd>{svc ? t(svc.title) : '—'}</dd>
-                </div>
-                {doctors.length > 1 && (
-                  <div>
-                    <dt>{t({ id: 'Dokter', en: 'Doctor' })}</dt>
-                    <dd>{doctor || t({ id: 'Siapa saja', en: 'Any available' })}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt>{t({ id: 'Jadwal', en: 'Time' })}</dt>
-                  <dd>{date ? `${longDate}${time ? `, ${time} WITA` : ''}` : '—'}</dd>
-                </div>
-                <div>
-                  <dt>{t({ id: 'Nama', en: 'Name' })}</dt>
-                  <dd>{form.name.trim() || '—'}</dd>
-                </div>
-              </dl>
-              <button type="submit" className="btn btn-light bk-submit" disabled={!ready}>
-                <WhatsAppIcon size={18} /> {t({ id: 'Kirim via WhatsApp', en: 'Send via WhatsApp' })}
-              </button>
-              <p className="bk-note">
-                {ready
-                  ? t({ id: 'Tim kami akan membalas di WhatsApp untuk konfirmasi jadwal.', en: 'Our team will confirm your appointment on WhatsApp.' })
-                  : `${t({ id: 'Belum diisi', en: 'Still needed' })}: ${missing.join(', ')}.`}
-              </p>
-            </div>
-
-            <div className="bk-contact">
-              <div>
-                <h5>{t({ id: 'Alamat', en: 'Address' })}</h5>
-                <a href={CLINIC.mapsUrl} target="_blank" rel="noreferrer">
-                  {CLINIC.addressLines.map((l) => <span key={l}>{l}<br /></span>)}
-                </a>
-              </div>
-              <div>
-                <h5>{t({ id: 'Telepon & WhatsApp', en: 'Phone & WhatsApp' })}</h5>
-                <a href={`tel:${CLINIC.phone}`}>{CLINIC.phoneDisplay}</a>
-              </div>
-              <div>
-                <h5>{t({ id: 'Jam Praktik', en: 'Opening Hours' })}</h5>
-                {HOURS.map((h, i) => <p key={i}>{t(h.days)}: {t(h.time)}</p>)}
-              </div>
-              <div>
-                <h5>Email</h5>
-                <a href={`mailto:${CLINIC.email}`}>{CLINIC.email}</a>
-              </div>
-            </div>
-          </aside>
+          <button type="submit" className="btn btn-primary bk-submit">
+            <WhatsAppIcon size={18} /> {t({ id: 'Kirim via WhatsApp', en: 'Send via WhatsApp' })}
+          </button>
+          <p className="bk-note">{t({ id: 'Belum pasti jadwalnya? Chat saja dulu — kami bantu carikan waktu yang pas.', en: 'Not sure about the time? Just message us — we’ll help find a slot.' })}</p>
         </Reveal>
       </div>
     </section>
