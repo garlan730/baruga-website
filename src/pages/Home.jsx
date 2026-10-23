@@ -451,8 +451,8 @@ function Doctors() {
           label={{ id: 'Tim Dokter', en: 'Our Doctors' }}
           title={{ id: 'Kenali dokter kami.', en: 'Meet our doctors.' }}
           text={{
-            id: 'Tujuh dokter gigi spesialis dari empat bidang — prostodonti, ortodonti, bedah mulut & maksilofasial, dan periodonti — serta dokter umum.',
-            en: 'Seven dental specialists across four fields — prosthodontics, orthodontics, oral & maxillofacial surgery, and periodontics — plus a general practitioner.',
+            id: 'Tujuh dokter gigi spesialis dari empat bidang — prostodonti, ortodonti, bedah mulut & maksilofasial, dan periodonti — didukung dokter gigi dan dokter umum.',
+            en: 'Seven dental specialists across four fields — prosthodontics, orthodontics, oral & maxillofacial surgery, and periodontics — supported by a general dentist and a general practitioner.',
           }}
         />
         <div className="doctors-grid">{dental.flatMap((g) => g.doctors.map((d) => ({ g, d }))).map(({ g, d }, i) => card(g, d, i))}</div>

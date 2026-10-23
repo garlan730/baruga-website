@@ -60,7 +60,7 @@ export const DOCTOR_GROUPS = [
     title: { id: 'Spesialis Prostodonti', en: 'Prosthodontics' },
     doctors: [
       { name: 'drg. Ian Afifah Sudarman, Sp.Pros', photo: '/img/doctors/ian.jpg' },
-      { name: 'drg. Andi Adhiyat Takdir, Sp.Pros', photo: '' },
+      { name: 'drg. Andi Adhiyat Takdir, Sp.Pros', photo: '/img/doctors/adhiyat.jpg' },
       { name: 'drg. Rezki Wahyuni Syamsuddin, Sp.Pros', photo: '/img/doctors/rezki.jpg' },
     ],
     role: { id: 'Dokter Gigi Spesialis Prostodonti', en: 'Prosthodontist' },
@@ -78,6 +78,12 @@ export const DOCTOR_GROUPS = [
     role: { id: 'Dokter Gigi Spesialis Periodonti', en: 'Periodontist' },
   },
   {
+    service: 'dentist',
+    title: { id: 'Dokter Gigi', en: 'General Dentistry' },
+    doctors: [{ name: 'drg. Andi Arigoh Asjad', photo: '/img/doctors/arigoh.jpg' }],
+    role: { id: 'Dokter Gigi', en: 'Dentist' },
+  },
+  {
     service: 'gp',
     title: { id: 'Dokter Umum', en: 'General Practice' },
     doctors: [{ name: 'dr. Andi Gunara', photo: '/img/doctors/gunara.jpg' }],
@@ -89,6 +95,7 @@ export const DOCTOR_GROUPS = [
 export const SERVICES = [
   { key: 'prosto', group: 'prosto', title: { id: 'Prostodonti & Implan', en: 'Prosthodontics & Implants' }, hint: { id: 'Gigi tiruan, crown, implan', en: 'Dentures, crowns, implants' } },
   { key: 'ortho', group: 'ortho', title: { id: 'Ortodonti (Behel)', en: 'Orthodontics (Braces)' }, hint: { id: 'Behel, clear aligner', en: 'Braces, clear aligners' } },
+  { key: 'dentist', group: 'dentist', title: { id: 'Perawatan Gigi Umum', en: 'General Dentistry' }, hint: { id: 'Tambal, scaling, cabut gigi', en: 'Fillings, scaling, extractions' } },
   { key: 'specialist', group: null, title: { id: 'Spesialis Lainnya', en: 'Other Specialists' }, hint: { id: 'Bedah mulut, periodonti (gusi)', en: 'Oral surgery, periodontics (gums)' } },
   { key: 'vaccine', group: 'gp', title: { id: 'Vaksin Umroh & Haji', en: 'Umrah & Hajj Vaccine' }, hint: { id: 'Meningitis, polio, ICV', en: 'Meningitis, polio, ICV' } },
   { key: 'gp', group: 'gp', title: { id: 'Dokter Umum', en: 'General Practitioner' }, hint: { id: 'Konsultasi & surat sehat', en: 'Check-ups & certificates' } },
