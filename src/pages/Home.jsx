@@ -92,20 +92,31 @@ const WHY = [
 ]
 
 const JOURNEYS = {
-  implant: {
-    tab: { id: 'Implan Gigi', en: 'Dental Implants' },
-    title: { id: 'Begini tahapan pasang implan gigi.', en: 'Here’s how getting an implant works.' },
+  general: {
+    tab: { id: 'Perawatan Gigi', en: 'Dental Care' },
+    title: { id: 'Dari konsultasi sampai kontrol, kami dampingi.', en: 'From first visit to follow-up, we’re with you.' },
     steps: [
-      [{ id: 'Konsultasi', en: 'Consultation' }, { id: 'Periksa kondisi gigi & bahas keluhan', en: 'Initial assessment and discussion' }],
+      [{ id: 'Buat Janji', en: 'Book a Visit' }, { id: 'Lewat website atau WhatsApp', en: 'Online or via WhatsApp' }],
+      [{ id: 'Pemeriksaan', en: 'Examination' }, { id: 'Cek kondisi gigi & gusi, rontgen bila perlu', en: 'Teeth and gums checked, X-ray if needed' }],
+      [{ id: 'Penjelasan & Biaya', en: 'Options & Costs' }, { id: 'Pilihan perawatan dijelaskan, biaya disepakati di awal', en: 'Options explained, costs agreed upfront' }],
+      [{ id: 'Perawatan', en: 'Treatment' }, { id: 'Oleh dokter gigi spesialis yang sesuai', en: 'By the right specialist for your case' }],
+      [{ id: 'Kontrol', en: 'Follow-Up' }, { id: 'Pemeriksaan ulang agar hasilnya awet', en: 'Check-ups so results last' }],
+    ],
+  },
+  implant: {
+    tab: { id: 'Implan & Gigi Tiruan', en: 'Implants & Dentures' },
+    title: { id: 'Begini tahapan mengganti gigi yang hilang.', en: 'How we replace missing teeth.' },
+    steps: [
+      [{ id: 'Konsultasi', en: 'Consultation' }, { id: 'Periksa kondisi gigi & bahas keluhan', en: 'Check your teeth and discuss concerns' }],
       [{ id: 'Rontgen & Analisis', en: 'X-ray & Analysis' }, { id: 'Melihat kondisi tulang rahang', en: 'Checking your jawbone' }],
-      [{ id: 'Rencana Perawatan', en: 'Treatment Plan' }, { id: 'Pilihan perawatan & perkiraan biaya', en: 'Options and cost estimate' }],
-      [{ id: 'Pemasangan Implan', en: 'Implant Placement' }, { id: 'Dilakukan dengan bius lokal', en: 'Done under local anesthesia' }],
-      [{ id: 'Restorasi', en: 'Restoration' }, { id: 'Gigi baru dipasang di atas implan', en: 'Crown or bridge fitted' }],
-      [{ id: 'Kontrol', en: 'Follow-Up' }, { id: 'Kontrol rutin agar implan awet', en: 'Regular check-ups' }],
+      [{ id: 'Pilih Solusi', en: 'Choose a Solution' }, { id: 'Implan, bridge, atau gigi tiruan', en: 'Implant, bridge, or dentures' }],
+      [{ id: 'Tindakan', en: 'Procedure' }, { id: 'Dilakukan dengan bius lokal bila diperlukan', en: 'Under local anesthesia when needed' }],
+      [{ id: 'Gigi Baru Terpasang', en: 'New Teeth Fitted' }, { id: 'Disesuaikan agar nyaman dipakai', en: 'Adjusted for comfort' }],
+      [{ id: 'Kontrol', en: 'Follow-Up' }, { id: 'Kontrol rutin agar awet', en: 'Regular check-ups' }],
     ],
   },
   ortho: {
-    tab: { id: 'Ortodonti', en: 'Orthodontics' },
+    tab: { id: 'Behel', en: 'Braces' },
     title: { id: 'Senyum rapi dimulai dari rencana yang matang.', en: 'A straighter smile starts with a thoughtful plan.' },
     steps: [
       [{ id: 'Konsultasi Awal', en: 'Initial Consultation' }, { id: 'Ceritakan keluhan & harapan Anda', en: 'Discuss your concerns and goals' }],
@@ -113,16 +124,6 @@ const JOURNEYS = {
       [{ id: 'Rencana Perawatan', en: 'Treatment Plan' }, { id: 'Jenis behel & perkiraan lama perawatan', en: 'Appliance options and duration' }],
       [{ id: 'Perawatan Aktif', en: 'Active Treatment' }, { id: 'Pasang behel/aligner, lalu kontrol rutin', en: 'Braces or aligners, regular visits' }],
       [{ id: 'Retensi', en: 'Retention' }, { id: 'Pakai retainer agar gigi tidak bergeser lagi', en: 'Retainers to keep your result' }],
-    ],
-  },
-  vaccine: {
-    tab: { id: 'Vaksin Umroh', en: 'Umrah Vaccine' },
-    title: { id: 'Urusan vaksin ibadah, cukup sekali datang.', en: 'Your pilgrimage vaccines, sorted in one visit.' },
-    steps: [
-      [{ id: 'Buat Janji', en: 'Book' }, { id: 'Pilih jadwal lewat website atau WhatsApp', en: 'Online or via WhatsApp' }],
-      [{ id: 'Pemeriksaan', en: 'Check-up' }, { id: 'Skrining oleh dokter umum', en: 'Screening by our GP' }],
-      [{ id: 'Vaksinasi', en: 'Vaccination' }, { id: 'Meningitis & polio', en: 'Meningitis & polio' }],
-      [{ id: 'ICV Terbit', en: 'ICV Issued' }, { id: 'ICV langsung bisa dibawa pulang', en: 'Take your certificate home' }],
     ],
   },
 }
@@ -286,7 +287,7 @@ function Why() {
   return (
     <section className="why-section">
       <div className="container">
-        <SectionHead label={{ id: 'Mengapa Baruga', en: 'Why Baruga' }} title={{ id: 'Ditangani ahlinya, dilayani dengan hangat.', en: 'Expert hands, warm care.' }} />
+        <SectionHead label={{ id: 'Keunggulan Kami', en: 'Why Baruga' }} title={{ id: 'Kenapa pasien memilih Baruga?', en: 'Why patients choose Baruga' }} />
         <div className="why-grid">
           {WHY.map((w, i) => (
             <Reveal key={i} className="why-item" delay={i * 80}>
@@ -302,7 +303,7 @@ function Why() {
 
 function Journey() {
   const { t } = useLang()
-  const [tab, setTab] = useState('implant')
+  const [tab, setTab] = useState('general')
   const j = JOURNEYS[tab]
   return (
     <section className="journey-section">
@@ -459,8 +460,8 @@ export default function Home() {
       <Treatments />
       <Why />
       <Journey />
-      <UmrohBand />
       <Results />
+      <UmrohBand />
       <Doctors />
       <section className="faq-section" id="faq">
         <div className="container faq-grid">
