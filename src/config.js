@@ -91,6 +91,14 @@ export const DOCTOR_GROUPS = [
   },
 ]
 
+// Display order of the team grid (by name). Doctors not listed follow in group order.
+export const TEAM_ORDER = [
+  'drg. Gerwyn Dewanta P., Sp.Orto',
+  'drg. Andi Adhiyat Takdir, Sp.Pros',
+  'drg. Muh. Arizal Fuad Alam, Sp.Ort',
+  'drg. Ian Afifah Sudarman, Sp.Pros',
+]
+
 // Booking options. `group` points at DOCTOR_GROUPS to offer a doctor choice.
 export const SERVICES = [
   { key: 'prosto', group: 'prosto', title: { id: 'Prostodonti & Implan', en: 'Prosthodontics & Implants' }, hint: { id: 'Gigi tiruan, crown, implan', en: 'Dentures, crowns, implants' } },

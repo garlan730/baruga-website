@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { activePromo, CLINIC, DOCTOR_GROUPS, HOURS, waLink } from '../config.js'
+import { activePromo, CLINIC, DOCTOR_GROUPS, HOURS, TEAM_ORDER, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
@@ -435,6 +435,8 @@ function DoctorPhoto({ doctor }) {
 function Doctors() {
   const { t } = useLang()
   const dental = DOCTOR_GROUPS.filter((g) => g.service !== 'gp')
+  const rank = (name) => (TEAM_ORDER.includes(name) ? TEAM_ORDER.indexOf(name) : TEAM_ORDER.length)
+  const team = dental.flatMap((g) => g.doctors.map((d) => ({ g, d }))).sort((a, b) => rank(a.d.name) - rank(b.d.name))
   const gp = DOCTOR_GROUPS.filter((g) => g.service === 'gp')
   const card = (g, d, i) => (
     <Reveal key={d.name} className="doctor-card" delay={(i % 4) * 70}>
@@ -455,7 +457,7 @@ function Doctors() {
             en: 'Seven dental specialists across four fields — prosthodontics, orthodontics, oral & maxillofacial surgery, and periodontics — supported by a general dentist and a general practitioner.',
           }}
         />
-        <div className="doctors-grid">{dental.flatMap((g) => g.doctors.map((d) => ({ g, d }))).map(({ g, d }, i) => card(g, d, i))}</div>
+        <div className="doctors-grid">{team.map(({ g, d }, i) => card(g, d, i))}</div>
 
         {gp.flatMap((g) =>
           g.doctors.map((d) => (
