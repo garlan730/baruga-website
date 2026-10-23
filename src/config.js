@@ -23,14 +23,56 @@ export const HOURS = [
 export const waLink = (message = '') =>
   `https://wa.me/${CLINIC.whatsapp}${message ? `?text=${encodeURIComponent(message)}` : ''}`
 
-// Photo filenames live in /public/img/doctors. A missing photo falls back to initials.
-export const DOCTORS = [
-  { name: 'drg. Andi Gerwyn Dewanta P., Sp.Ort', role: { id: 'Spesialis Ortodonti', en: 'Orthodontist' }, photo: '/img/doctors/gerwyn.jpg' },
-  { name: 'drg. Muh. Arizal Fuad Alam, Sp.Ort', role: { id: 'Spesialis Ortodonti', en: 'Orthodontist' }, photo: '/img/doctors/arizal.jpg' },
-  { name: 'drg. Ian Afifah Sudarman, Sp.Pros', role: { id: 'Spesialis Prostodonti', en: 'Prosthodontist' }, photo: '/img/doctors/ian.jpg' },
-  // TODO: confirm this photo (new-gun.png in the old site) is drg. Adhiyat.
-  { name: 'drg. Andi Adhiyat Takdir, Sp.Pros', role: { id: 'Spesialis Prostodonti', en: 'Prosthodontist' }, photo: '/img/doctors/adhiyat.jpg' },
-  { name: 'drg. Rezki Wahyuni Syamsuddin, Sp.Pros', role: { id: 'Spesialis Prostodonti', en: 'Prosthodontist' }, photo: '/img/doctors/rezki.jpg' },
-  { name: 'drg. Husnul Basyar, Sp.BMM', role: { id: 'Spesialis Bedah Mulut & Maksilofasial', en: 'Oral & Maxillofacial Surgeon' }, photo: '/img/doctors/husnul.jpg' },
-  { name: 'drg. Nur Masyta Suriadi, Sp.Perio', role: { id: 'Spesialis Periodonti', en: 'Periodontist' }, photo: '/img/doctors/masyta.jpg' },
+// Doctors grouped by department, in display order. Photos live in /public/img/doctors;
+// a missing photo falls back to initials. `service` links a group to a booking option.
+export const DOCTOR_GROUPS = [
+  {
+    service: 'ortho',
+    title: { id: 'Spesialis Ortodonti', en: 'Orthodontics' },
+    doctors: [
+      { name: 'drg. Gerwyn Dewanta P., Sp.Orto', photo: '/img/doctors/gerwyn.jpg' },
+      { name: 'drg. Muh. Arizal Fuad Alam, Sp.Ort', photo: '/img/doctors/arizal.jpg' },
+    ],
+    role: { id: 'Dokter Gigi Spesialis Ortodonti', en: 'Orthodontist' },
+  },
+  {
+    service: 'prosto',
+    title: { id: 'Spesialis Prostodonti', en: 'Prosthodontics' },
+    doctors: [
+      { name: 'drg. Ian Afifah Sudarman, Sp.Pros', photo: '/img/doctors/ian.jpg' },
+      { name: 'drg. Andi Adhiyat Takdir, Sp.Pros', photo: '' },
+      { name: 'drg. Rezki Wahyuni Syamsuddin, Sp.Pros', photo: '/img/doctors/rezki.jpg' },
+    ],
+    role: { id: 'Dokter Gigi Spesialis Prostodonti', en: 'Prosthodontist' },
+  },
+  {
+    service: 'surgery',
+    title: { id: 'Spesialis Bedah Mulut & Maksilofasial', en: 'Oral & Maxillofacial Surgery' },
+    doctors: [{ name: 'drg. Husnul Basyar, Sp.BMM', photo: '/img/doctors/husnul.jpg' }],
+    role: { id: 'Dokter Gigi Spesialis Bedah Mulut & Maksilofasial', en: 'Oral & Maxillofacial Surgeon' },
+  },
+  {
+    service: 'perio',
+    title: { id: 'Spesialis Periodonti', en: 'Periodontics' },
+    doctors: [{ name: 'drg. Nur Masyta Suriadi, Sp.Perio', photo: '/img/doctors/masyta.jpg' }],
+    role: { id: 'Dokter Gigi Spesialis Periodonti', en: 'Periodontist' },
+  },
+  {
+    service: 'gp',
+    title: { id: 'Dokter Umum', en: 'General Practice' },
+    doctors: [{ name: 'dr. Andi Gunara', photo: '/img/doctors/gunara.jpg' }],
+    role: { id: 'Dokter Umum · Vaksin Umroh & Haji', en: 'General Practitioner · Umrah & Hajj Vaccines' },
+  },
 ]
+
+// Booking options. `group` points at DOCTOR_GROUPS to offer a doctor choice.
+export const SERVICES = [
+  { key: 'prosto', group: 'prosto', title: { id: 'Prostodonti & Implan', en: 'Prosthodontics & Implants' }, hint: { id: 'Gigi tiruan, crown, implan', en: 'Dentures, crowns, implants' } },
+  { key: 'ortho', group: 'ortho', title: { id: 'Ortodonti (Behel)', en: 'Orthodontics (Braces)' }, hint: { id: 'Behel, clear aligner', en: 'Braces, clear aligners' } },
+  { key: 'specialist', group: null, title: { id: 'Spesialis Lainnya', en: 'Other Specialists' }, hint: { id: 'Bedah mulut, periodonti (gusi)', en: 'Oral surgery, periodontics (gums)' } },
+  { key: 'vaccine', group: 'gp', title: { id: 'Vaksin Umroh & Haji', en: 'Umrah & Hajj Vaccine' }, hint: { id: 'Meningitis, polio, ICV', en: 'Meningitis, polio, ICV' } },
+  { key: 'gp', group: 'gp', title: { id: 'Dokter Umum', en: 'General Practitioner' }, hint: { id: 'Konsultasi & surat sehat', en: 'Check-ups & certificates' } },
+]
+
+// Bookable times, Monday–Saturday (getDay 1–6), 30-minute slots from 17:00 until 21:30.
+export const SCHEDULE = { openDays: [1, 2, 3, 4, 5, 6], startHour: 17, endHour: 22, slotMinutes: 30 }

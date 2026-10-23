@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CLINIC, DOCTORS, HOURS, waLink } from '../config.js'
+import { CLINIC, DOCTOR_GROUPS, HOURS, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
+import Booking from '../components/Booking.jsx'
 
 const TRUST = [
-  { id: 'Dokter Gigi Spesialis', en: 'Specialist Dentists' },
-  { id: 'Implan & Prostodonti', en: 'Implants & Prosthodontics' },
-  { id: 'Ortodonti Modern', en: 'Modern Orthodontics' },
+  { id: 'Dokter Gigi Spesialis Lengkap', en: 'A Full Specialist Team' },
+  { id: 'Prostodonti & Implan', en: 'Prosthodontics & Implants' },
+  { id: 'Ortodonti & Aligner', en: 'Orthodontics & Aligners' },
   { id: 'Dokter Umum & Vaksin Umroh', en: 'GP & Umrah Vaccines' },
 ]
 
@@ -17,19 +18,20 @@ const TREATMENTS = [
     id: 'prosthodontics',
     video: '/video/prosthodontics.mp4',
     poster: '/img/cases/prostho-case.jpg',
-    title: { id: 'Prostodonti & Restorasi Gigi', en: 'Prosthodontics & Dental Restoration' },
+    title: { id: 'Prostodonti & Implan Gigi', en: 'Prosthodontics & Dental Implants' },
     text: {
-      id: 'Kembalikan tampilan, fungsi, dan kenyamanan senyum Anda dengan solusi prostodonti yang dirancang sesuai kondisi mulut, gaya hidup, dan kebutuhan jangka panjang Anda.',
-      en: 'Restore the appearance, function, and comfort of your smile with prosthodontic solutions designed around your oral health, lifestyle, and long-term needs.',
+      id: 'Gigi hilang, patah, atau aus? Dokter gigi spesialis prostodonti kami mengembalikan fungsi kunyah, kenyamanan, dan estetika senyum Anda dengan rencana perawatan yang disesuaikan untuk jangka panjang.',
+      en: 'Missing, broken, or worn teeth? Our prosthodontists restore chewing function, comfort, and the look of your smile with a plan built for the long term.',
     },
     items: [
       { id: 'Implan gigi', en: 'Dental implants' },
       { id: 'Mahkota (crown) & jembatan (bridge)', en: 'Crowns & bridges' },
       { id: 'Veneer & restorasi estetik', en: 'Veneers & aesthetic restorations' },
-      { id: 'Gigi tiruan (lepasan & cekat)', en: 'Dentures (removable & fixed)' },
-      { id: 'Restorasi di atas implan', en: 'Implant-supported restorations' },
+      { id: 'Gigi tiruan lepasan & cekat', en: 'Removable & fixed dentures' },
       { id: 'Rehabilitasi seluruh mulut', en: 'Full-mouth rehabilitation' },
     ],
+    cta: { id: 'Buat janji prostodonti', en: 'Book prosthodontics' },
+    service: 'prosto',
   },
   {
     id: 'orthodontics',
@@ -37,78 +39,90 @@ const TREATMENTS = [
     poster: '/img/cases/ortho-case.jpg',
     title: { id: 'Ortodonti', en: 'Orthodontics' },
     text: {
-      id: 'Perawatan ortodonti yang direncanakan dengan cermat untuk senyum yang lebih sehat, seimbang, dan percaya diri.',
-      en: 'Thoughtfully planned orthodontic treatment for a healthier, more balanced, and confident smile.',
+      id: 'Gigi berjejal, renggang, atau maju? Dokter gigi spesialis ortodonti kami merencanakan setiap pergerakan gigi dengan cermat untuk senyum yang rapi, seimbang, dan gigitan yang sehat.',
+      en: 'Crowded, gapped, or protruding teeth? Our orthodontists carefully plan every tooth movement for a straight, balanced smile and a healthy bite.',
     },
     items: [
-      { id: 'Behel konvensional (metal)', en: 'Traditional braces' },
+      { id: 'Behel metal', en: 'Metal braces' },
       { id: 'Behel keramik', en: 'Ceramic braces' },
       { id: 'Clear aligner', en: 'Clear aligners' },
-      { id: 'Ortodonti dewasa & remaja', en: 'Adult & teen orthodontics' },
+      { id: 'Ortodonti anak, remaja & dewasa', en: 'Orthodontics for children, teens & adults' },
       { id: 'Kasus ortodonti kompleks', en: 'Complex orthodontic cases' },
     ],
+    cta: { id: 'Buat janji ortodonti', en: 'Book orthodontics' },
+    service: 'ortho',
+  },
+]
+
+const SUPPORT = [
+  {
+    title: { id: 'Bedah Mulut & Maksilofasial', en: 'Oral & Maxillofacial Surgery' },
+    text: { id: 'Pencabutan gigi bungsu (impaksi), bedah minor, dan bedah penunjang implan.', en: 'Wisdom tooth (impaction) removal, minor oral surgery, and surgery supporting implants.' },
+  },
+  {
+    title: { id: 'Periodonti', en: 'Periodontics' },
+    text: { id: 'Perawatan gusi berdarah, karang gigi, dan jaringan penyangga gigi.', en: 'Care for bleeding gums, tartar, and the tissues that support your teeth.' },
   },
 ]
 
 const GP_ITEMS = [
   { id: 'Konsultasi & pemeriksaan dokter umum', en: 'General practitioner consultations' },
-  { id: 'Vaksin meningitis untuk Umroh & Haji', en: 'Meningitis vaccine for Umrah & Hajj' },
-  { id: 'Vaksin polio untuk Umroh & Haji', en: 'Polio vaccine for Umrah & Hajj' },
+  { id: 'Vaksin meningitis & polio untuk Umroh dan Haji', en: 'Meningitis & polio vaccines for Umrah and Hajj' },
   { id: 'Penerbitan ICV (buku kuning)', en: 'ICV (yellow book) issuance' },
   { id: 'Surat keterangan sehat', en: 'Medical certificates' },
 ]
 
 const WHY = [
   {
-    title: { id: 'Keahlian Spesialis', en: 'Specialist Expertise' },
-    text: { id: 'Ditangani dokter gigi spesialis prostodonti, ortodonti, periodonti, dan bedah mulut — dengan presisi dan kepedulian.', en: 'Care from specialists in prosthodontics, orthodontics, periodontics, and oral surgery — delivered with precision.' },
+    title: { id: 'Spesialis Lengkap, Satu Klinik', en: 'Every Specialist, One Clinic' },
+    text: { id: 'Prostodonti, ortodonti, bedah mulut, dan periodonti ada di sini. Kasus yang melibatkan beberapa bidang ditangani bersama, tanpa perlu dirujuk ke tempat lain.', en: 'Prosthodontics, orthodontics, oral surgery, and periodontics under one roof. Cases spanning several fields are handled together — no referrals elsewhere.' },
   },
   {
     title: { id: 'Rencana Perawatan Personal', en: 'Personalized Planning' },
-    text: { id: 'Setiap perawatan dimulai dengan memahami kebutuhan, tujuan, dan kondisi klinis Anda.', en: "Every treatment begins with understanding the patient's needs, goals, and clinical condition." },
+    text: { id: 'Setiap perawatan dimulai dengan mendengarkan keluhan dan tujuan Anda, lalu menjelaskan pilihan dan biayanya secara terbuka.', en: 'Every treatment starts by listening to your concerns and goals, then explaining your options and costs openly.' },
   },
   {
     title: { id: 'Teknologi Modern', en: 'Modern Technology' },
-    text: { id: 'Diagnostik dan perencanaan digital membantu perawatan lebih tepat dan terprediksi.', en: 'Digital diagnostics and planning make treatment more precise and predictable.' },
+    text: { id: 'Diagnosis dan perencanaan digital membuat hasil perawatan lebih tepat dan terprediksi.', en: 'Digital diagnosis and planning make outcomes more precise and predictable.' },
   },
   {
-    title: { id: 'Satu Klinik, Kebutuhan Keluarga', en: 'One Clinic for the Family' },
-    text: { id: 'Dari perawatan gigi spesialis hingga dokter umum dan vaksin perjalanan ibadah — semuanya di satu tempat.', en: 'From specialist dental care to general practice and pilgrimage vaccines — all under one roof.' },
+    title: { id: 'Praktik Sore, Sesuai Jadwal Anda', en: 'Evening Hours That Fit Your Day' },
+    text: { id: 'Buka Senin–Sabtu pukul 17.00–22.00 WITA, jadi Anda bisa datang sepulang kerja atau sekolah.', en: 'Open Monday–Saturday, 17:00–22:00 WITA, so you can visit after work or school.' },
   },
 ]
 
 const JOURNEYS = {
   implant: {
     tab: { id: 'Implan Gigi', en: 'Dental Implants' },
-    title: { id: 'Mengganti gigi yang hilang lebih dari sekadar senyum.', en: 'Replacing a missing tooth is more than restoring a smile.' },
+    title: { id: 'Mengganti gigi yang hilang, langkah demi langkah.', en: 'Replacing a missing tooth, step by step.' },
     steps: [
-      [{ id: 'Konsultasi', en: 'Consultation' }, { id: 'Diskusi & pemeriksaan awal', en: 'Initial discussion and assessment' }],
-      [{ id: 'Asesmen Digital', en: 'Digital Assessment' }, { id: 'Pencitraan & analisis', en: 'Imaging and analysis' }],
-      [{ id: 'Rencana Perawatan', en: 'Treatment Plan' }, { id: 'Pendekatan personal', en: 'Personalized approach' }],
-      [{ id: 'Pemasangan Implan', en: 'Implant Placement' }, { id: 'Prosedur bedah yang presisi', en: 'Precise surgical procedure' }],
-      [{ id: 'Restorasi', en: 'Restoration' }, { id: 'Mahkota atau bridge alami', en: 'Natural-looking crown or bridge' }],
-      [{ id: 'Kontrol', en: 'Follow-Up' }, { id: 'Perawatan berkelanjutan', en: 'Ongoing care and support' }],
+      [{ id: 'Konsultasi', en: 'Consultation' }, { id: 'Pemeriksaan & diskusi awal', en: 'Initial assessment and discussion' }],
+      [{ id: 'Asesmen Digital', en: 'Digital Assessment' }, { id: 'Rontgen & analisis tulang', en: 'X-rays and bone analysis' }],
+      [{ id: 'Rencana Perawatan', en: 'Treatment Plan' }, { id: 'Pilihan & estimasi biaya', en: 'Options and cost estimate' }],
+      [{ id: 'Pemasangan Implan', en: 'Implant Placement' }, { id: 'Prosedur dengan anestesi lokal', en: 'Done under local anesthesia' }],
+      [{ id: 'Restorasi', en: 'Restoration' }, { id: 'Pemasangan mahkota atau bridge', en: 'Crown or bridge fitted' }],
+      [{ id: 'Kontrol', en: 'Follow-Up' }, { id: 'Pemantauan berkala', en: 'Regular check-ups' }],
     ],
   },
   ortho: {
     tab: { id: 'Ortodonti', en: 'Orthodontics' },
     title: { id: 'Senyum rapi dimulai dari rencana yang matang.', en: 'A straighter smile starts with a thoughtful plan.' },
     steps: [
-      [{ id: 'Konsultasi Awal', en: 'Initial Consultation' }, { id: 'Diskusikan tujuan Anda', en: 'Discuss your goals' }],
-      [{ id: 'Scan Digital', en: 'Digital Scan' }, { id: 'Pemeriksaan yang nyaman', en: 'Comfortable assessment' }],
-      [{ id: 'Rencana Perawatan', en: 'Treatment Plan' }, { id: 'Pendekatan personal', en: 'Personalized approach' }],
-      [{ id: 'Perawatan Aktif', en: 'Active Treatment' }, { id: 'Behel atau aligner', en: 'Braces or aligners' }],
-      [{ id: 'Retensi', en: 'Retention' }, { id: 'Menjaga hasil perawatan', en: 'Maintain your results' }],
+      [{ id: 'Konsultasi Awal', en: 'Initial Consultation' }, { id: 'Diskusikan keluhan & tujuan', en: 'Discuss your concerns and goals' }],
+      [{ id: 'Pemeriksaan', en: 'Records' }, { id: 'Foto, rontgen & cetak/scan gigi', en: 'Photos, X-rays, and impressions/scan' }],
+      [{ id: 'Rencana Perawatan', en: 'Treatment Plan' }, { id: 'Pilihan alat & durasi', en: 'Appliance options and duration' }],
+      [{ id: 'Perawatan Aktif', en: 'Active Treatment' }, { id: 'Behel atau aligner, kontrol rutin', en: 'Braces or aligners, regular visits' }],
+      [{ id: 'Retensi', en: 'Retention' }, { id: 'Retainer untuk menjaga hasil', en: 'Retainers to keep your result' }],
     ],
   },
   vaccine: {
     tab: { id: 'Vaksin Umroh', en: 'Umrah Vaccine' },
-    title: { id: 'Persiapan kesehatan ibadah, dalam satu kunjungan.', en: 'Pilgrimage health prep, in a single visit.' },
+    title: { id: 'Persiapan kesehatan ibadah, cukup sekali datang.', en: 'Pilgrimage health prep, in a single visit.' },
     steps: [
-      [{ id: 'Hubungi Kami', en: 'Contact Us' }, { id: 'Jadwalkan via WhatsApp', en: 'Schedule via WhatsApp' }],
+      [{ id: 'Buat Janji', en: 'Book' }, { id: 'Pilih jadwal online atau via WhatsApp', en: 'Online or via WhatsApp' }],
       [{ id: 'Pemeriksaan', en: 'Check-up' }, { id: 'Skrining oleh dokter umum', en: 'Screening by our GP' }],
       [{ id: 'Vaksinasi', en: 'Vaccination' }, { id: 'Meningitis & polio', en: 'Meningitis & polio' }],
-      [{ id: 'ICV Terbit', en: 'ICV Issued' }, { id: 'Sertifikat siap dibawa', en: 'Certificate ready to go' }],
+      [{ id: 'ICV Terbit', en: 'ICV Issued' }, { id: 'Sertifikat langsung dibawa pulang', en: 'Take your certificate home' }],
     ],
   },
 }
@@ -116,49 +130,41 @@ const JOURNEYS = {
 const RESULTS = [
   {
     img: '/img/cases/prostho-case.jpg',
-    title: { id: 'Mahkota Sementara dengan Perawatan Saluran Akar', en: 'Provisional Crown with Root Canal Treatment' },
-    text: { id: 'Perawatan saluran akar dilanjutkan mahkota sementara mengembalikan gigi agar bebas nyeri, berfungsi penuh, dan tampak alami.', en: 'Root canal treatment followed by a provisional crown restores the tooth — pain-free, fully functional, and natural-looking.' },
+    title: { id: 'Perawatan Saluran Akar & Mahkota Sementara', en: 'Root Canal Treatment & Provisional Crown' },
+    text: { id: 'Gigi yang rusak dirawat saluran akarnya lalu dilindungi mahkota sementara — kembali bebas nyeri, berfungsi, dan tampak alami.', en: 'A damaged tooth treated with a root canal and protected by a provisional crown — pain-free, functional, and natural-looking again.' },
   },
   {
     img: '/img/cases/ortho-case.jpg',
     title: { id: 'Perawatan Ortodonti Dewasa', en: 'Adult Orthodontic Treatment' },
-    text: { id: 'Perawatan ortodonti menyeluruh untuk senyum yang seimbang dan percaya diri.', en: 'Comprehensive orthodontic care for a balanced, confident smile.' },
+    text: { id: 'Perawatan behel menyeluruh untuk susunan gigi yang rapi dan gigitan yang seimbang.', en: 'Comprehensive braces treatment for well-aligned teeth and a balanced bite.' },
   },
 ]
 
 const FAQ = [
   {
+    q: { id: 'Dokter gigi spesialis apa saja yang ada di Baruga?', en: 'Which dental specialists does Baruga have?' },
+    a: { id: 'Kami memiliki dokter gigi spesialis prostodonti, ortodonti, bedah mulut & maksilofasial, serta periodonti. Prostodonti dan ortodonti adalah layanan utama kami.', en: 'We have specialists in prosthodontics, orthodontics, oral & maxillofacial surgery, and periodontics. Prosthodontics and orthodontics are our core services.' },
+  },
+  {
     q: { id: 'Berapa biaya implan gigi?', en: 'How much does a dental implant cost?' },
-    a: { id: 'Biaya bergantung pada kondisi klinis, jumlah implan, prosedur pendukung, dan jenis restorasi akhir. Kami sarankan konsultasi untuk rencana dan estimasi biaya yang akurat.', en: 'Costs depend on your clinical condition, number of implants, supporting procedures, and final restoration. We recommend a consultation for an accurate plan and estimate.' },
+    a: { id: 'Biaya bergantung pada kondisi tulang, jumlah implan, prosedur pendukung, dan jenis restorasi akhir. Estimasi yang akurat diberikan setelah konsultasi dan pemeriksaan.', en: 'It depends on bone condition, number of implants, supporting procedures, and the final restoration. You’ll get an accurate estimate after a consultation and examination.' },
   },
   {
-    q: { id: 'Berapa lama perawatan implan gigi?', en: 'How long does implant treatment take?' },
-    a: { id: 'Bervariasi tergantung kondisi tulang, penyembuhan, dan kompleksitas kasus. Sebagian selesai dalam beberapa bulan, sebagian lain membutuhkan waktu lebih lama.', en: 'It varies with bone condition, healing, and complexity. Some cases finish within a few months; others take longer.' },
-  },
-  {
-    q: { id: 'Apakah pemasangan implan terasa sakit?', en: 'Are dental implants painful?' },
-    a: { id: 'Prosedur dilakukan dengan anestesi lokal. Rasa tidak nyaman setelahnya umumnya ringan dan dapat diatasi dengan obat pereda nyeri.', en: 'The procedure uses local anesthesia. Post-operative discomfort is usually mild and manageable with pain relief.' },
+    q: { id: 'Apakah pemasangan implan sakit?', en: 'Are dental implants painful?' },
+    a: { id: 'Prosedur dilakukan dengan anestesi lokal, sehingga umumnya tidak terasa sakit. Rasa tidak nyaman setelahnya biasanya ringan dan dapat diatasi dengan obat pereda nyeri.', en: 'The procedure is done under local anesthesia, so it’s generally painless. Any discomfort afterwards is usually mild and eased with pain relief.' },
   },
   {
     q: { id: 'Berapa lama perawatan behel?', en: 'How long does orthodontic treatment take?' },
-    a: { id: 'Tergantung kompleksitas kasus dan metode. Umumnya 12–24 bulan, sebagian kasus lebih singkat atau lebih lama.', en: 'It depends on complexity and method — typically 12–24 months, sometimes shorter or longer.' },
+    a: { id: 'Umumnya 12–24 bulan, tergantung tingkat kerumitan kasus dan jenis alat yang digunakan.', en: 'Usually 12–24 months, depending on the complexity of the case and the appliance used.' },
   },
   {
     q: { id: 'Apakah tersedia clear aligner?', en: 'Do you offer clear aligners?' },
-    a: { id: 'Ya, untuk pasien yang sesuai. Konsultasi akan menentukan apakah aligner tepat untuk kasus Anda.', en: 'Yes, for suitable candidates. A consultation will determine whether aligners are right for you.' },
+    a: { id: 'Ya. Dokter spesialis ortodonti akan menilai apakah aligner cocok untuk kasus Anda saat konsultasi.', en: 'Yes. Our orthodontist will assess whether aligners suit your case during the consultation.' },
   },
   {
-    q: { id: 'Apakah saya bisa vaksin Umroh/Haji di sini sekaligus mendapat ICV?', en: 'Can I get my Umrah/Hajj vaccines and ICV here?' },
-    a: { id: 'Bisa. Dokter umum kami melayani vaksin meningitis dan polio sekaligus penerbitan ICV (buku kuning). Lihat halaman Vaksin Umroh & Haji untuk persiapannya.', en: 'Yes. Our GP provides meningitis and polio vaccines along with ICV (yellow book) issuance. See the Umrah & Hajj Vaccine page for preparation details.' },
+    q: { id: 'Bisakah saya vaksin Umroh/Haji sekaligus membuat ICV di sini?', en: 'Can I get my Umrah/Hajj vaccines and ICV here?' },
+    a: { id: 'Bisa. Dokter umum kami memberikan vaksin meningitis dan polio sekaligus menerbitkan ICV (buku kuning) dalam satu kunjungan.', en: 'Yes. Our GP gives the meningitis and polio vaccines and issues your ICV (yellow book) in the same visit.' },
   },
-]
-
-const SERVICES = [
-  { id: 'Prostodonti / Implan', en: 'Prosthodontics / Implants' },
-  { id: 'Ortodonti / Behel', en: 'Orthodontics / Braces' },
-  { id: 'Perawatan gigi umum', en: 'General dentistry' },
-  { id: 'Dokter umum', en: 'General practitioner' },
-  { id: 'Vaksin Umroh / Haji', en: 'Umrah / Hajj vaccine' },
 ]
 
 function Hero() {
@@ -168,21 +174,21 @@ function Hero() {
       <div className="hero-overlay" />
       <div className="container hero-grid">
         <div className="hero-content">
-          <div className="hero-label">{t({ id: 'Prostodonti · Ortodonti · Dokter Umum', en: 'Prosthodontics · Orthodontics · General Practice' })}</div>
+          <div className="hero-label">{t({ id: 'Klinik Gigi Spesialis · Makassar', en: 'Specialist Dental Clinic · Makassar' })}</div>
           <h1 className="hero-title">
-            {t({ id: 'Kedokteran gigi modern,', en: 'Advanced dentistry,' })}
+            {t({ id: 'Senyum sehat,', en: 'Healthy smiles,' })}
             <br />
-            <em>{t({ id: 'dirancang untuk Anda.', en: 'designed around you.' })}</em>
+            <em>{t({ id: 'ditangani spesialisnya.', en: 'in specialist hands.' })}</em>
           </h1>
           <p className="hero-subtitle">
             {t({
-              id: 'Perawatan gigi spesialis yang memadukan keahlian klinis, teknologi modern, dan pengalaman pasien yang penuh perhatian — kini juga dengan layanan dokter umum.',
-              en: 'Specialist dental care combining clinical expertise, modern technology, and a thoughtful patient experience — now with general practice services too.',
+              id: 'Tim dokter gigi spesialis lengkap dengan keahlian utama di prostodonti dan ortodonti — didukung teknologi modern dan pelayanan yang penuh perhatian.',
+              en: 'A complete team of dental specialists, led by our prosthodontists and orthodontists — backed by modern technology and attentive care.',
             })}
           </p>
           <div className="hero-buttons">
             <Link to="/#contact" className="btn btn-primary">{t({ id: 'Buat Janji Konsultasi', en: 'Book a Consultation' })}</Link>
-            <Link to="/#treatments" className="btn btn-secondary">{t({ id: 'Lihat Perawatan', en: 'Explore Treatments' })}</Link>
+            <Link to="/#treatments" className="btn btn-secondary">{t({ id: 'Lihat Layanan', en: 'Explore Services' })}</Link>
           </div>
           <Link to="/vaksin-umroh" className="hero-notice">
             <span className="hero-notice-tag">{t({ id: 'Tersedia', en: 'Available' })}</span>
@@ -210,7 +216,10 @@ function Treatments() {
   return (
     <section className="treatments-section" id="treatments">
       <div className="container">
-        <SectionHead label={{ id: 'Layanan Kami', en: 'Our Services' }} title={{ id: 'Perawatan khusus untuk senyum yang ingin Anda miliki.', en: 'Specialized care for the smile you want to live with.' }} />
+        <SectionHead
+          label={{ id: 'Layanan Utama', en: 'Core Services' }}
+          title={{ id: 'Dua keahlian utama kami, untuk senyum yang ingin Anda miliki.', en: 'Two core specialties, for the smile you want to live with.' }}
+        />
 
         {TREATMENTS.map((tr, i) => (
           <Reveal key={tr.id} className={`treatment-block${i % 2 ? ' reverse' : ''}`} id={tr.id}>
@@ -224,15 +233,28 @@ function Treatments() {
               <ul className="treatment-list">
                 {tr.items.map((it, j) => <li key={j}>{t(it)}</li>)}
               </ul>
-              <Link to="/#contact" className="btn-link">{t({ id: 'Konsultasikan sekarang', en: 'Book a consultation' })}</Link>
+              <Link to={`/?layanan=${tr.service}#contact`} className="btn-link">{t(tr.cta)}</Link>
             </div>
           </Reveal>
         ))}
 
+        <Reveal className="support-strip">
+          <div className="support-intro">
+            <span className="section-label">{t({ id: 'Didukung Spesialis Lainnya', en: 'Supported by More Specialists' })}</span>
+            <p>{t({ id: 'Perawatan yang menyeluruh, tanpa perlu dirujuk ke klinik lain.', en: 'Complete care, without referrals to another clinic.' })}</p>
+          </div>
+          {SUPPORT.map((s, i) => (
+            <div key={i} className="support-item">
+              <h4>{t(s.title)}</h4>
+              <p>{t(s.text)}</p>
+            </div>
+          ))}
+        </Reveal>
+
         <Reveal className="treatment-block" id="general">
           <div className="treatment-media gp-panel">
             <span className="gp-panel-label">{t({ id: 'Dokter Umum', en: 'General Practice' })}</span>
-            <p className="gp-panel-title">{t({ id: 'Siap sehat sebelum berangkat ke Tanah Suci.', en: 'Ready and healthy before your pilgrimage.' })}</p>
+            <p className="gp-panel-title">{t({ id: 'Sehat dan siap sebelum berangkat ke Tanah Suci.', en: 'Healthy and ready before your pilgrimage.' })}</p>
             <div className="gp-chips">
               <span>Meningitis</span>
               <span>Polio</span>
@@ -244,8 +266,8 @@ function Treatments() {
             <h3>{t({ id: 'Dokter Umum & Vaksinasi', en: 'General Practice & Vaccination' })}</h3>
             <p className="body-text">
               {t({
-                id: 'Selain perawatan gigi, dokter umum kami siap melayani pemeriksaan kesehatan dan vaksinasi — termasuk vaksin wajib jamaah Umroh dan Haji lengkap dengan ICV.',
-                en: 'Alongside dental care, our general practitioner provides check-ups and vaccinations — including the required Umrah and Hajj vaccines with ICV issuance.',
+                id: 'Selain perawatan gigi, dokter umum kami melayani pemeriksaan kesehatan dan vaksinasi — termasuk vaksin wajib jamaah Umroh dan Haji, lengkap dengan penerbitan ICV.',
+                en: 'Alongside dental care, our general practitioner offers check-ups and vaccinations — including the required Umrah and Hajj vaccines, with ICV issuance.',
               })}
             </p>
             <ul className="treatment-list">
@@ -264,7 +286,7 @@ function Why() {
   return (
     <section className="why-section">
       <div className="container">
-        <SectionHead label={{ id: 'Mengapa Kami', en: 'Why Us' }} title={{ id: 'Keahlian yang bisa dipercaya. Perawatan yang bisa dirasakan.', en: 'Expertise you can trust. Care you can feel.' }} />
+        <SectionHead label={{ id: 'Mengapa Baruga', en: 'Why Baruga' }} title={{ id: 'Keahlian yang bisa dipercaya. Perawatan yang bisa dirasakan.', en: 'Expertise you can trust. Care you can feel.' }} />
         <div className="why-grid">
           {WHY.map((w, i) => (
             <Reveal key={i} className="why-item" delay={i * 80}>
@@ -317,14 +339,14 @@ function UmrohBand() {
           <h2 className="headline light">{t({ id: 'Fokus beribadah, urusan vaksin serahkan pada kami.', en: 'Focus on your worship — leave the vaccines to us.' })}</h2>
           <p className="body-text light">
             {t({
-              id: 'Vaksin meningitis dan polio, pemeriksaan oleh dokter, dan ICV (buku kuning) dalam satu kunjungan. Melayani jamaah perorangan maupun rombongan biro perjalanan.',
-              en: 'Meningitis and polio vaccines, a doctor’s check-up, and your ICV (yellow book) in a single visit. For individual pilgrims and travel-agency groups alike.',
+              id: 'Vaksin meningitis dan polio, pemeriksaan dokter, dan ICV (buku kuning) dalam satu kunjungan. Melayani jamaah perorangan maupun rombongan biro perjalanan.',
+              en: 'Meningitis and polio vaccines, a doctor’s check-up, and your ICV (yellow book) in a single visit — for individual pilgrims and travel-agency groups alike.',
             })}
           </p>
         </Reveal>
         <Reveal className="umroh-actions" delay={120}>
-          <Link to="/vaksin-umroh" className="btn btn-light">{t({ id: 'Lihat Persiapan', en: 'See Preparation' })}</Link>
-          <a className="btn btn-outline-light" href={waLink(t({ id: 'Halo, saya ingin jadwalkan vaksin Umroh/Haji (meningitis & polio).', en: 'Hello, I would like to schedule Umrah/Hajj vaccines (meningitis & polio).' }))} target="_blank" rel="noreferrer">
+          <Link to="/vaksin-umroh" className="btn btn-light">{t({ id: 'Lihat Persiapan', en: 'See How to Prepare' })}</Link>
+          <a className="btn btn-outline-light" href={waLink(t({ id: 'Halo, saya ingin menjadwalkan vaksin Umroh/Haji (meningitis & polio).', en: 'Hello, I would like to schedule Umrah/Hajj vaccines (meningitis & polio).' }))} target="_blank" rel="noreferrer">
             <WhatsAppIcon size={18} /> {t({ id: 'Jadwalkan via WhatsApp', en: 'Schedule on WhatsApp' })}
           </a>
         </Reveal>
@@ -351,128 +373,73 @@ function Results() {
           ))}
         </div>
         <p className="result-disclaimer">
-          {t({ id: 'Hasil setiap pasien berbeda, tergantung kondisi klinis dan rencana perawatan masing-masing.', en: "Individual results vary depending on each patient's clinical condition and treatment plan." })}
+          {t({ id: 'Hasil setiap pasien dapat berbeda, tergantung kondisi klinis dan rencana perawatannya.', en: "Individual results vary depending on each patient's clinical condition and treatment plan." })}
         </p>
       </div>
     </section>
   )
 }
 
-function DoctorPhoto({ doctor }) {
-  const [failed, setFailed] = useState(false)
-  const initials = doctor.name
+function initialsOf(name) {
+  return name
     .replace(/^drg?\.\s*/i, '')
     .split(',')[0]
     .split(/\s+/)
     .filter((w) => /^[A-Z]/.test(w) && !w.endsWith('.'))
-    .slice(0, 2)
+    .slice(-2)
     .map((w) => w[0])
     .join('')
-  if (failed || !doctor.photo) return <div className="doctor-image placeholder">{initials}</div>
+}
+
+function DoctorPhoto({ doctor }) {
+  const [failed, setFailed] = useState(false)
+  if (failed || !doctor.photo) return <div className="doctor-image placeholder">{initialsOf(doctor.name)}</div>
   return <img className="doctor-image" src={doctor.photo} alt={doctor.name} loading="lazy" onError={() => setFailed(true)} />
 }
 
 function Doctors() {
   const { t } = useLang()
+  const dental = DOCTOR_GROUPS.filter((g) => g.service !== 'gp')
+  const gp = DOCTOR_GROUPS.filter((g) => g.service === 'gp')
+  const card = (g, d, i) => (
+    <Reveal key={d.name} className="doctor-card" delay={(i % 4) * 70}>
+      <DoctorPhoto doctor={d} />
+      <span className="doctor-group">{t(g.title)}</span>
+      <h4>{d.name}</h4>
+    </Reveal>
+  )
+
   return (
     <section className="doctors-section" id="doctors">
       <div className="container">
-        <SectionHead label={{ id: 'Tim Kami', en: 'Our Team' }} title={{ id: 'Profesional berpengalaman. Perhatian personal.', en: 'Experienced professionals. Personal attention.' }} />
-        <div className="doctors-grid">
-          {DOCTORS.map((d, i) => (
-            <Reveal key={d.name} className="doctor-card" delay={(i % 4) * 70}>
+        <SectionHead
+          label={{ id: 'Tim Dokter', en: 'Our Doctors' }}
+          title={{ id: 'Tim dokter gigi spesialis.', en: 'Our team of dental specialists.' }}
+          text={{
+            id: 'Tujuh dokter gigi spesialis di empat bidang — prostodonti, ortodonti, bedah mulut & maksilofasial, dan periodonti — ditambah dokter umum.',
+            en: 'Seven dental specialists across four fields — prosthodontics, orthodontics, oral & maxillofacial surgery, and periodontics — plus a general practitioner.',
+          }}
+        />
+        <div className="doctors-grid">{dental.flatMap((g) => g.doctors.map((d) => ({ g, d }))).map(({ g, d }, i) => card(g, d, i))}</div>
+
+        {gp.flatMap((g) =>
+          g.doctors.map((d) => (
+            <Reveal key={d.name} className="gp-doctor">
               <DoctorPhoto doctor={d} />
-              <h4>{d.name}</h4>
-              <div className="doctor-specialty">{t(d.role)}</div>
+              <div>
+                <span className="doctor-group">{t(g.title)}</span>
+                <h4>{d.name}</h4>
+                <p>
+                  {t({
+                    id: 'Melayani konsultasi dokter umum, surat keterangan sehat, serta vaksin meningitis dan polio untuk jamaah Umroh & Haji lengkap dengan ICV.',
+                    en: 'Provides general consultations, medical certificates, and meningitis and polio vaccines for Umrah & Hajj pilgrims, with ICV issuance.',
+                  })}
+                </p>
+                <Link to="/vaksin-umroh" className="btn-link">{t({ id: 'Info vaksin Umroh & Haji', en: 'Umrah & Hajj vaccine info' })}</Link>
+              </div>
             </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function Contact() {
-  const { t } = useLang()
-  const [form, setForm] = useState({ name: '', phone: '', service: '', date: '', message: '' })
-  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
-
-  const submit = (e) => {
-    e.preventDefault()
-    const lines = [
-      t({ id: 'Halo Baruga Medical Center, saya ingin membuat janji.', en: 'Hello Baruga Medical Center, I would like to book an appointment.' }),
-      `${t({ id: 'Nama', en: 'Name' })}: ${form.name}`,
-      `${t({ id: 'No. HP', en: 'Phone' })}: ${form.phone}`,
-      form.service && `${t({ id: 'Layanan', en: 'Service' })}: ${form.service}`,
-      form.date && `${t({ id: 'Tanggal yang diinginkan', en: 'Preferred date' })}: ${form.date}`,
-      form.message && `${t({ id: 'Catatan', en: 'Notes' })}: ${form.message}`,
-    ].filter(Boolean)
-    window.open(waLink(lines.join('\n')), '_blank', 'noopener')
-  }
-
-  return (
-    <section className="contact-section" id="contact">
-      <div className="container contact-grid">
-        <div>
-          <SectionHead label={{ id: 'Kontak', en: 'Contact' }} title={{ id: 'Buat janji konsultasi.', en: 'Book your consultation.' }} />
-          <div className="contact-details">
-            <div>
-              <h5>{t({ id: 'Alamat Klinik', en: 'Clinic Address' })}</h5>
-              <a href={CLINIC.mapsUrl} target="_blank" rel="noreferrer">
-                {CLINIC.addressLines.map((l) => <span key={l}>{l}<br /></span>)}
-              </a>
-            </div>
-            <div>
-              <h5>{t({ id: 'Telepon & WhatsApp', en: 'Phone & WhatsApp' })}</h5>
-              <a href={`tel:${CLINIC.phone}`}>{CLINIC.phoneDisplay}</a>
-              <br />
-              <a href={waLink()} target="_blank" rel="noreferrer">{t({ id: 'Chat via WhatsApp', en: 'Chat on WhatsApp' })}</a>
-            </div>
-            <div>
-              <h5>Email</h5>
-              <a href={`mailto:${CLINIC.email}`}>{CLINIC.email}</a>
-            </div>
-            <div>
-              <h5>{t({ id: 'Jam Praktik', en: 'Opening Hours' })}</h5>
-              {HOURS.map((h, i) => <p key={i}>{t(h.days)}: {t(h.time)}</p>)}
-              <p className="muted">{t({ id: 'Poli Gigi & Dokter Umum', en: 'Dental & General Practice' })}</p>
-            </div>
-          </div>
-        </div>
-
-        <Reveal as="form" className="contact-form" onSubmit={submit}>
-          <label>
-            {t({ id: 'Nama', en: 'Name' })}
-            <input required value={form.name} onChange={set('name')} autoComplete="name" />
-          </label>
-          <label>
-            {t({ id: 'No. HP / WhatsApp', en: 'Phone / WhatsApp' })}
-            <input required type="tel" value={form.phone} onChange={set('phone')} autoComplete="tel" />
-          </label>
-          <div className="form-row">
-            <label>
-              {t({ id: 'Layanan', en: 'Service' })}
-              <select value={form.service} onChange={set('service')}>
-                <option value="">{t({ id: 'Pilih…', en: 'Select…' })}</option>
-                {SERVICES.map((s) => <option key={s.id} value={t(s)}>{t(s)}</option>)}
-              </select>
-            </label>
-            <label>
-              {t({ id: 'Tanggal yang diinginkan', en: 'Preferred date' })}
-              <input type="date" value={form.date} onChange={set('date')} />
-            </label>
-          </div>
-          <label>
-            {t({ id: 'Catatan', en: 'Message' })}
-            <textarea rows={4} value={form.message} onChange={set('message')} />
-          </label>
-          <button type="submit" className="btn btn-primary">
-            <WhatsAppIcon size={18} /> {t({ id: 'Kirim via WhatsApp', en: 'Send via WhatsApp' })}
-          </button>
-          <p className="form-note">
-            {t({ id: 'Formulir akan membuka WhatsApp. Tim kami akan mengonfirmasi jadwal Anda.', en: 'The form opens WhatsApp. Our team will confirm your appointment.' })}
-          </p>
-        </Reveal>
+          )),
+        )}
       </div>
     </section>
   )
@@ -501,7 +468,7 @@ export default function Home() {
           <Faq items={FAQ} />
         </div>
       </section>
-      <Contact />
+      <Booking />
     </>
   )
 }

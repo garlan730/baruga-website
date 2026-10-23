@@ -8,7 +8,7 @@ import Vaccine from './pages/Vaccine.jsx'
 
 // Scroll to #hash targets after navigation, or to the top on a new page.
 function ScrollManager() {
-  const { pathname, hash } = useLocation()
+  const { pathname, search, hash } = useLocation()
   useEffect(() => {
     if (hash) {
       const el = document.getElementById(hash.slice(1))
@@ -18,7 +18,7 @@ function ScrollManager() {
       }
     }
     window.scrollTo(0, 0)
-  }, [pathname, hash])
+  }, [pathname, search, hash])
   return null
 }
 

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { CLINIC, HOURS, waLink } from '../config.js'
+import { CLINIC, DOCTOR_GROUPS, HOURS, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
@@ -17,7 +17,7 @@ const INCLUDED = [
     tag: '02',
     title: { id: 'Vaksin Polio', en: 'Polio Vaccine' },
     text: {
-      id: 'Vaksin polio yang kini menjadi bagian persyaratan kesehatan jamaah dari Indonesia sebelum berangkat ke Tanah Suci.',
+      id: 'Vaksin polio yang kini termasuk persyaratan kesehatan bagi jamaah dari Indonesia sebelum berangkat ke Tanah Suci.',
       en: 'The polio vaccine now part of the health requirements for pilgrims travelling from Indonesia.',
     },
   },
@@ -25,7 +25,7 @@ const INCLUDED = [
     tag: '03',
     title: { id: 'Penerbitan ICV', en: 'ICV Issuance' },
     text: {
-      id: 'International Certificate of Vaccination (buku kuning) diterbitkan di klinik, siap digunakan untuk keperluan visa dan perjalanan.',
+      id: 'International Certificate of Vaccination (buku kuning) diterbitkan langsung di klinik, siap untuk keperluan visa dan perjalanan.',
       en: 'Your International Certificate of Vaccination (yellow book) is issued at the clinic, ready for visa and travel.',
     },
   },
@@ -40,10 +40,10 @@ const INCLUDED = [
 ]
 
 const STEPS = [
-  [{ id: 'Hubungi via WhatsApp', en: 'Message us on WhatsApp' }, { id: 'Pilih tanggal kunjungan. Rombongan bisa dijadwalkan khusus.', en: 'Pick a visit date. Groups can be scheduled together.' }],
+  [{ id: 'Buat janji', en: 'Book a time' }, { id: 'Pilih jadwal di formulir online atau hubungi kami via WhatsApp. Rombongan bisa dijadwalkan khusus.', en: 'Pick a time online or message us on WhatsApp. Groups can be scheduled together.' }],
   [{ id: 'Datang & registrasi', en: 'Arrive & register' }, { id: 'Bawa dokumen yang diperlukan (lihat daftar di bawah).', en: 'Bring the documents listed below.' }],
-  [{ id: 'Pemeriksaan & vaksinasi', en: 'Check-up & vaccination' }, { id: 'Dokter memeriksa kondisi Anda, lalu vaksin meningitis & polio diberikan.', en: 'The doctor checks you, then gives the meningitis & polio vaccines.' }],
-  [{ id: 'Terima ICV', en: 'Receive your ICV' }, { id: 'Sertifikat vaksinasi internasional siap dibawa pulang.', en: 'Your international vaccination certificate is ready to take home.' }],
+  [{ id: 'Pemeriksaan & vaksinasi', en: 'Check-up & vaccination' }, { id: 'Dokter memeriksa kondisi Anda, lalu memberikan vaksin meningitis dan polio.', en: 'The doctor checks you, then gives the meningitis and polio vaccines.' }],
+  [{ id: 'Terima ICV', en: 'Receive your ICV' }, { id: 'Sertifikat vaksinasi internasional langsung dibawa pulang.', en: 'Take your international vaccination certificate home the same day.' }],
 ]
 
 const BRING = [
@@ -103,6 +103,8 @@ export default function Vaccine() {
   const { t } = useLang()
   usePageTitle({ id: `Vaksin Umroh & Haji (Meningitis & Polio) + ICV — ${CLINIC.shortName}`, en: `Umrah & Hajj Vaccines (Meningitis & Polio) + ICV — ${CLINIC.shortName}` })
 
+  const gp = DOCTOR_GROUPS.find((g) => g.service === 'gp')?.doctors[0]
+
   const waMessage = t({
     id: 'Halo Baruga Medical Center, saya ingin jadwalkan vaksin Umroh/Haji (meningitis & polio) + ICV.\nNama:\nJumlah orang:\nRencana tanggal keberangkatan:',
     en: 'Hello Baruga Medical Center, I would like to schedule Umrah/Hajj vaccines (meningitis & polio) + ICV.\nName:\nNumber of people:\nPlanned departure date:',
@@ -129,10 +131,10 @@ export default function Vaccine() {
               })}
             </p>
             <div className="hero-buttons">
-              <a className="btn btn-primary" href={waLink(waMessage)} target="_blank" rel="noreferrer">
-                <WhatsAppIcon size={18} /> {t({ id: 'Jadwalkan via WhatsApp', en: 'Schedule on WhatsApp' })}
+              <Link to="/?layanan=vaccine#contact" className="btn btn-primary">{t({ id: 'Buat Janji Vaksin', en: 'Book a Vaccine Visit' })}</Link>
+              <a className="btn btn-secondary" href={waLink(waMessage)} target="_blank" rel="noreferrer">
+                <WhatsAppIcon size={18} /> {t({ id: 'Tanya via WhatsApp', en: 'Ask on WhatsApp' })}
               </a>
-              <a href="#prepare" className="btn btn-secondary">{t({ id: 'Persiapan', en: 'How to Prepare' })}</a>
             </div>
           </div>
           <div className="cert-card" aria-hidden="true">
@@ -190,6 +192,16 @@ export default function Vaccine() {
             </ol>
           </div>
           <Reveal className="bring-card" delay={120}>
+            {gp && (
+              <div className="bring-doctor">
+                <img src={gp.photo} alt={gp.name} loading="lazy" />
+                <div>
+                  <span className="doctor-group">{t({ id: 'Ditangani oleh', en: 'Your doctor' })}</span>
+                  <strong>{gp.name}</strong>
+                  <span>{t({ id: 'Dokter Umum', en: 'General Practitioner' })}</span>
+                </div>
+              </div>
+            )}
             <h4>{t({ id: 'Yang perlu dibawa', en: 'What to bring' })}</h4>
             <ul className="treatment-list">
               {BRING.map((b, i) => <li key={i}>{t(b)}</li>)}
@@ -220,9 +232,12 @@ export default function Vaccine() {
           <p className="body-text light">
             {t({ id: 'Perorangan maupun rombongan — hubungi kami untuk jadwal dan informasi biaya.', en: 'Individuals or groups — message us for schedules and pricing.' })}
           </p>
-          <a className="btn btn-light" href={waLink(waMessage)} target="_blank" rel="noreferrer">
-            <WhatsAppIcon size={18} /> {t({ id: 'Jadwalkan via WhatsApp', en: 'Schedule on WhatsApp' })}
-          </a>
+          <div className="cta-buttons">
+            <Link to="/?layanan=vaccine#contact" className="btn btn-light">{t({ id: 'Buat Janji Vaksin', en: 'Book a Vaccine Visit' })}</Link>
+            <a className="btn btn-outline-light" href={waLink(waMessage)} target="_blank" rel="noreferrer">
+              <WhatsAppIcon size={18} /> {t({ id: 'Tanya via WhatsApp', en: 'Ask on WhatsApp' })}
+            </a>
+          </div>
           <p className="cta-note">
             {t({
               id: 'Persyaratan vaksin dapat berubah mengikuti ketentuan Kementerian Kesehatan RI dan Pemerintah Arab Saudi. Konfirmasikan juga dengan biro perjalanan Anda.',
