@@ -42,7 +42,7 @@ export function activePromo(now = new Date()) {
 
 // Google Apps Script web app that copies each booking into the clinic calendar
 // (admin@barugamedicalcenter.com). Setup: apps-script/README.md. Empty = WhatsApp only.
-export const BOOKING_API_URL = ''
+export const BOOKING_API_URL = 'https://script.google.com/macros/s/AKfycby1QHDXtFih4sFcvqT2Jlqkiu12bgbMbvRSyPE5YwWWnL5hQkCNKm-Apsn47TTBS95X8g/exec'
 
 export const waLink = (message = '') =>
   `https://wa.me/${CLINIC.whatsapp}${message ? `?text=${encodeURIComponent(message)}` : ''}`
