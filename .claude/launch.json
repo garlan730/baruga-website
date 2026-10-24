@@ -4,8 +4,28 @@
     {
       "name": "baruga-website",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "5200", "--strictPort"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5200",
+        "--strictPort"
+      ],
       "port": 5200
+    },
+    {
+      "name": "baruga-website-prod",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "preview",
+        "--",
+        "--port",
+        "4210",
+        "--strictPort"
+      ],
+      "port": 4210
     }
   ]
 }

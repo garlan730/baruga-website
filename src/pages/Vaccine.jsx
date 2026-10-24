@@ -3,6 +3,7 @@ import { CLINIC, DOCTOR_GROUPS, HOURS, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
+import { pageMeta } from '../pageMeta.js'
 
 const INCLUDED = [
   {
@@ -68,7 +69,7 @@ const TIMING = [
   },
 ]
 
-const FAQ = [
+export const FAQ = [
   {
     q: { id: 'Kapan sebaiknya saya vaksin?', en: 'When should I get vaccinated?' },
     a: { id: 'Idealnya 2–4 minggu sebelum berangkat. Untuk vaksin meningitis, paling lambat 10 hari sebelum keberangkatan. Sebaiknya jangan mepet, supaya ICV sudah siap saat mengurus visa.', en: 'Ideally 2–4 weeks before departure, and no later than 10 days before for the meningitis vaccine. Don’t leave it to the last minute so your ICV is ready for visa processing.' },
@@ -101,7 +102,7 @@ const FAQ = [
 
 export default function Vaccine() {
   const { t } = useLang()
-  usePageTitle({ id: `Vaksin Umroh & Haji (Meningitis & Polio) + ICV — ${CLINIC.shortName}`, en: `Umrah & Hajj Vaccines (Meningitis & Polio) + ICV — ${CLINIC.shortName}` })
+  usePageTitle({ id: pageMeta('/vaksin-umroh').title, en: 'Umrah & Hajj Vaccines in Makassar + ICV | Baruga Medical Center' })
 
   const gp = DOCTOR_GROUPS.find((g) => g.service === 'gp')?.doctors[0]
 

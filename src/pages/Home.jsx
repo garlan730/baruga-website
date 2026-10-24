@@ -5,6 +5,7 @@ import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
 import Booking from '../components/Booking.jsx'
+import { pageMeta } from '../pageMeta.js'
 
 const TRUST = [
   { id: 'Dokter Gigi Spesialis Lengkap', en: 'A Full Specialist Team' },
@@ -141,7 +142,7 @@ const RESULTS = [
   },
 ]
 
-const FAQ = [
+export const FAQ = [
   {
     q: { id: 'Dokter gigi spesialis apa saja yang ada di Baruga?', en: 'Which dental specialists does Baruga have?' },
     a: { id: 'Ada spesialis prostodonti (gigi tiruan & implan), ortodonti (behel), bedah mulut & maksilofasial, dan periodonti (gusi). Prostodonti dan ortodonti adalah layanan utama kami.', en: 'We have specialists in prosthodontics, orthodontics, oral & maxillofacial surgery, and periodontics. Prosthodontics and orthodontics are our core services.' },
@@ -210,8 +211,8 @@ function Hero() {
           </h1>
           <p className="hero-subtitle">
             {t({
-              id: 'Klinik dengan dokter gigi spesialis lengkap — terutama prostodonti untuk gigi tiruan & implan, dan ortodonti untuk behel. Ditangani dengan teliti, dilayani dengan ramah.',
-              en: 'A clinic with a full team of dental specialists — led by prosthodontics for dentures & implants, and orthodontics for braces. Careful treatment, friendly service.',
+              id: 'Klinik gigi di Makassar dengan dokter gigi spesialis lengkap — terutama prostodonti untuk gigi tiruan & implan, dan ortodonti untuk behel. Ditangani dengan teliti, dilayani dengan ramah.',
+              en: 'A Makassar dental clinic with a full team of specialists — led by prosthodontics for dentures & implants, and orthodontics for braces. Careful treatment, friendly service.',
             })}
           </p>
           <div className="hero-buttons">
@@ -484,7 +485,7 @@ function Doctors() {
 
 export default function Home() {
   const { t } = useLang()
-  usePageTitle({ id: `${CLINIC.name} — Klinik Gigi Spesialis & Vaksin Umroh Makassar`, en: `${CLINIC.name} — Specialist Dental Clinic & Umrah Vaccines, Makassar` })
+  usePageTitle({ id: pageMeta('/').title, en: 'Specialist Dental Clinic in Makassar | Baruga Medical Center' })
   return (
     <>
       <Hero />
