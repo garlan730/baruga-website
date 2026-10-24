@@ -370,6 +370,13 @@ button { font: inherit; }
 .result-info h4 { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 500; margin-bottom: 8px; }
 .result-info p { font-size: 0.92rem; color: var(--text-medium); }
 .result-disclaimer { margin-top: 30px; font-size: 0.8rem; font-style: italic; color: var(--text-light); }
+.rating-strip { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 36px; padding: 24px 28px; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-subtle); }
+.rating-score { display: flex; align-items: baseline; gap: 10px; }
+.rating-score strong { font-family: var(--font-serif); font-size: 2.6rem; font-weight: 500; line-height: 1; }
+.rating-score .stars { color: #e3a008; font-size: 1.15rem; letter-spacing: 2px; }
+.rating-strip p { flex: 1; min-width: 200px; font-size: 0.95rem; color: var(--text-medium); }
+.rating-links { display: flex; gap: 22px; }
+.footer-grid a.footer-review { margin-top: 10px; color: var(--champagne); }
 @media (max-width: 768px) { .results-grid { grid-template-columns: 1fr; } .result-card img { height: 300px; } }
 
 /* ---------- Doctors ---------- */

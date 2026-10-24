@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { activePromo, CLINIC, DOCTOR_GROUPS, HOURS, TEAM_ORDER, waLink } from '../config.js'
+import { activePromo, CLINIC, DOCTOR_GROUPS, GOOGLE_RATING, HOURS, TEAM_ORDER, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
@@ -411,6 +411,22 @@ function Results() {
         <p className="result-disclaimer">
           {t({ id: 'Hasil perawatan bisa berbeda pada setiap pasien, tergantung kondisi masing-masing.', en: "Individual results vary depending on each patient's clinical condition and treatment plan." })}
         </p>
+        <Reveal className="rating-strip">
+          <div className="rating-score">
+            <strong>{GOOGLE_RATING.score}</strong>
+            <span className="stars" aria-hidden="true">★★★★★</span>
+          </div>
+          <p>
+            {t({
+              id: `Dari ${GOOGLE_RATING.count} ulasan pasien di Google. Terima kasih atas kepercayaannya!`,
+              en: `From ${GOOGLE_RATING.count} patient reviews on Google. Thank you for your trust!`,
+            })}
+          </p>
+          <div className="rating-links">
+            <a href={CLINIC.mapsUrl} target="_blank" rel="noreferrer" className="btn-link">{t({ id: 'Baca ulasan', en: 'Read reviews' })}</a>
+            <a href={CLINIC.reviewUrl} target="_blank" rel="noreferrer" className="btn-link">{t({ id: 'Tulis ulasan', en: 'Write a review' })}</a>
+          </div>
+        </Reveal>
       </div>
     </section>
   )

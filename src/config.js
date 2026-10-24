@@ -10,9 +10,13 @@ export const CLINIC = {
   addressLines: ['Jl. Raya Baruga No.28, Antang, Kec. Manggala', 'Kota Makassar, Sulawesi Selatan 90234'],
   mapsUrl: 'https://maps.app.goo.gl/yTKFD9eF7oSNfg1E9',
   instagram: 'https://www.instagram.com/barugamedicalcenter/',
+  reviewUrl: 'https://g.page/r/CU5zPJWFZ-HQEBE/review', // "write a review" link from Google Business Profile
   facebook: '', // leave empty to hide
   tiktok: '',
 }
+
+// Google Business Profile rating shown on the site. Update now and then from the profile.
+export const GOOGLE_RATING = { score: '5,0', count: 26 }
 
 // Dental and general practice share the same hours for now.
 export const HOURS = [

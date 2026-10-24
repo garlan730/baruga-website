@@ -38,6 +38,9 @@ export default function Footer() {
           {socials.map(([name, url]) => (
             <a key={name} href={url} target="_blank" rel="noreferrer">{name}</a>
           ))}
+          <a href={CLINIC.reviewUrl} target="_blank" rel="noreferrer" className="footer-review">
+            ★ {t({ id: 'Beri ulasan di Google', en: 'Review us on Google' })}
+          </a>
         </div>
       </div>
       <div className="container footer-bottom">
