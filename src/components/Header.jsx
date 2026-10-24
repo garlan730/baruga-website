@@ -44,33 +44,36 @@ export default function Header() {
   }, [open])
 
   return (
-    <header className={`header${scrolled || pathname !== '/' ? ' scrolled' : ''}`}>
-      <div className="header-inner">
-        <Link to="/" className="logo" aria-label="Baruga Medical Center">
-          <img src="/img/logo.png" alt="Baruga Medical Center" />
-        </Link>
-
-        <nav className="nav-desktop">
-          {NAV.map((n) => (
-            <Link key={n.to} to={n.to} className={`nav-link${n.to === pathname ? ' current' : ''}`}>
-              {t(n.label)}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="header-actions">
-          <LangToggle />
-          <Link to="/#contact" className="btn btn-primary btn-sm header-cta">
-            {t({ id: 'Buat Janji', en: 'Book Now' })}
+    <>
+      <header className={`header${scrolled || pathname !== '/' ? ' scrolled' : ''}`}>
+        <div className="header-inner">
+          <Link to="/" className="logo" aria-label="Baruga Medical Center">
+            <img src="/img/logo.png" alt="Baruga Medical Center" />
           </Link>
-          <button className={`mobile-toggle${open ? ' active' : ''}`} onClick={() => setOpen((o) => !o)} aria-label="Menu" aria-expanded={open}>
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
-      </div>
 
+          <nav className="nav-desktop">
+            {NAV.map((n) => (
+              <Link key={n.to} to={n.to} className={`nav-link${n.to === pathname ? ' current' : ''}`}>
+                {t(n.label)}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="header-actions">
+            <LangToggle />
+            <Link to="/#contact" className="btn btn-primary btn-sm header-cta">
+              {t({ id: 'Buat Janji', en: 'Book Now' })}
+            </Link>
+            <button className={`mobile-toggle${open ? ' active' : ''}`} onClick={() => setOpen((o) => !o)} aria-label="Menu" aria-expanded={open}>
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Outside <header>: its backdrop-filter would otherwise trap this fixed overlay inside the header box. */}
       <div className={`mobile-menu${open ? ' active' : ''}`} onClick={() => setOpen(false)}>
         {NAV.map((n) => (
           <Link key={n.to} to={n.to}>
@@ -81,6 +84,6 @@ export default function Header() {
           {t({ id: 'Buat Janji Konsultasi', en: 'Book a Consultation' })}
         </Link>
       </div>
-    </header>
+    </>
   )
 }
