@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useLang } from '../i18n.jsx'
 
 const NAV = [
-  { to: '/#treatments', label: { id: 'Perawatan', en: 'Treatments' } },
+  { to: '/#treatments', label: { id: 'Perawatan Gigi', en: 'Dental Care' } },
   { to: '/vaksin-umroh', label: { id: 'Vaksin Umroh & Haji', en: 'Umrah & Hajj Vaccine' } },
   { to: '/#doctors', label: { id: 'Tim Dokter', en: 'Our Doctors' } },
   { to: '/#results', label: { id: 'Hasil', en: 'Results' } },

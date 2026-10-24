@@ -105,7 +105,7 @@ export const TEAM_ORDER = [
 
 // Booking options. `group` points at DOCTOR_GROUPS to offer a doctor choice.
 export const SERVICES = [
-  { key: 'prosto', group: 'prosto', title: { id: 'Prostodonti & Implan', en: 'Prosthodontics & Implants' }, hint: { id: 'Gigi tiruan, crown, implan', en: 'Dentures, crowns, implants' } },
+  { key: 'prosto', group: 'prosto', title: { id: 'Prostodonti (Gigi Palsu)', en: 'Prosthodontics (Dentures)' }, hint: { id: 'Gigi tiruan, crown, implan', en: 'Dentures, crowns, implants' } },
   { key: 'ortho', group: 'ortho', title: { id: 'Ortodonti (Behel)', en: 'Orthodontics (Braces)' }, hint: { id: 'Behel, clear aligner', en: 'Braces, clear aligners' } },
   { key: 'dentist', group: 'dentist', title: { id: 'Perawatan Gigi Umum', en: 'General Dentistry' }, hint: { id: 'Tambal, scaling, cabut gigi', en: 'Fillings, scaling, extractions' } },
   { key: 'specialist', group: null, title: { id: 'Spesialis Lainnya', en: 'Other Specialists' }, hint: { id: 'Bedah mulut, periodonti (gusi)', en: 'Oral surgery, periodontics (gums)' } },
