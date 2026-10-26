@@ -20,7 +20,7 @@ function clinicSchema() {
     name: CLINIC.name,
     alternateName: [CLINIC.shortName, 'BMC Makassar'],
     url: SITE_URL,
-    logo: `${SITE_URL}/img/logo.png`,
+    logo: `${SITE_URL}/favicon-512.png`,
     image: OG_IMAGE,
     telephone: CLINIC.phone,
     email: CLINIC.email,
