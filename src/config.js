@@ -6,6 +6,7 @@ export const CLINIC = {
   phoneDisplay: '0851-2101-9161',
   phone: '+6285121019161',
   whatsapp: '6285121019161', // international format without "+"
+  partnershipWhatsapp: '6287782319329', // travel/KBIH partnership line (from the partnership proposal)
   email: 'admin@barugamedicalcenter.com',
   addressLines: ['Jl. Raya Baruga No.28, Antang, Kec. Manggala', 'Kota Makassar, Sulawesi Selatan 90234'],
   mapsUrl: 'https://maps.app.goo.gl/yTKFD9eF7oSNfg1E9',
@@ -48,8 +49,11 @@ export function activePromo(now = new Date()) {
 // (admin@barugamedicalcenter.com). Setup: apps-script/README.md. Empty = WhatsApp only.
 export const BOOKING_API_URL = 'https://script.google.com/macros/s/AKfycbzuU4pkHbuLTxBXBD-O1xYy0GHrLlUqdRz8F_9YmXtrwXOl2sp17Rg7dj2yO5QA9c2ASg/exec'
 
-export const waLink = (message = '') =>
-  `https://wa.me/${CLINIC.whatsapp}${message ? `?text=${encodeURIComponent(message)}` : ''}`
+export const waLink = (message = '', number = CLINIC.whatsapp) =>
+  `https://wa.me/${number}${message ? `?text=${encodeURIComponent(message)}` : ''}`
+
+// Partnership proposal for travel agents, served from /public/files.
+export const PARTNERSHIP_PDF = { url: '/files/proposal-kerja-sama-vaksin-umroh-baruga.pdf', pages: 13, size: '1,4 MB' }
 
 // Doctors grouped by department, in display order. Photos live in /public/img/doctors;
 // a missing photo falls back to initials. `service` links a group to a booking option.

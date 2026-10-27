@@ -511,6 +511,22 @@ button { font: inherit; }
 .bring-doctor strong { display: block; font-family: var(--font-serif); font-size: 1.25rem; font-weight: 500; }
 .bring-doctor span:last-child { font-size: 0.82rem; color: var(--text-light); }
 .cta-note { margin-top: 30px; max-width: 560px; font-size: 0.78rem; opacity: 0.6; }
+.partner-hint { display: inline-block; margin-top: 22px; font-size: 0.88rem; color: var(--olive-dark); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+.partner-hint:hover { border-color: var(--olive-dark); }
+.partner-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 64px; align-items: center; }
+.partner-grid .section-head { margin-bottom: 30px; }
+.partner-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
+.partner-benefit { border-top: 1px solid var(--beige); padding-top: 14px; }
+.partner-benefit h4 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 500; margin-bottom: 4px; }
+.partner-benefit p { font-size: 0.9rem; color: var(--text-medium); }
+.partner-actions { display: flex; align-items: center; gap: 14px 22px; flex-wrap: wrap; margin-top: 32px; }
+.partner-meta { margin-top: 12px; font-size: 0.78rem; color: var(--text-light); }
+.partner-cover { display: block; text-decoration: none; color: var(--charcoal); }
+.partner-cover img { width: 100%; height: auto; border-radius: var(--radius); box-shadow: var(--shadow-medium); transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+.partner-cover:hover img { transform: translateY(-4px); box-shadow: 0 16px 50px rgba(0, 0, 0, 0.16); }
+.partner-cover span { display: block; margin-top: 14px; font-family: var(--font-ui); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--taupe); }
+@media (max-width: 900px) { .partner-grid { grid-template-columns: 1fr; gap: 40px; } .partner-cover { max-width: 520px; } }
+@media (max-width: 560px) { .partner-benefits { grid-template-columns: 1fr; } .partner-actions .btn { flex: 1 1 100%; } }
 @media (max-width: 1000px) { .included-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 860px) {
   .page-hero { padding: 120px 0 70px; }

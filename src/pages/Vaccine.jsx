@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { CLINIC, DOCTOR_GROUPS, HOURS, waLink } from '../config.js'
+import { CLINIC, DOCTOR_GROUPS, HOURS, PARTNERSHIP_PDF, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
@@ -69,6 +69,25 @@ const TIMING = [
   },
 ]
 
+const PARTNER_BENEFITS = [
+  {
+    title: { id: 'Fee untuk travel', en: 'Referral fee' },
+    text: { id: 'Fee dari setiap jamaah yang divaksin, direkap dan ditransfer ke rekening travel tiap akhir bulan.', en: 'A fee for every pilgrim vaccinated, tallied and transferred to the agency each month.' },
+  },
+  {
+    title: { id: 'Jadwal rombongan', en: 'Group scheduling' },
+    text: { id: 'Satu rombongan diatur dalam satu jadwal. Di luar jam praktik bisa dengan janji.', en: 'Each group gets its own time slot. Outside opening hours by appointment.' },
+  },
+  {
+    title: { id: 'Harga khusus perawatan gigi', en: 'Special dental rates' },
+    text: { id: 'Diskon hingga 30% untuk perawatan gigi dan cek kesehatan, bagi jamaah serta agen dan staf travel.', en: 'Up to 30% off dental care and health checks, for pilgrims as well as agents and staff.' },
+  },
+  {
+    title: { id: 'Cukup lewat WhatsApp', en: 'All via WhatsApp' },
+    text: { id: 'Kirim nama, nomor paspor, dan tanggal keberangkatan jamaah — sisanya kami yang atur.', en: 'Send names, passport numbers, and departure dates — we handle the rest.' },
+  },
+]
+
 export const FAQ = [
   {
     q: { id: 'Kapan sebaiknya saya vaksin?', en: 'When should I get vaccinated?' },
@@ -92,7 +111,7 @@ export const FAQ = [
   },
   {
     q: { id: 'Bisa untuk rombongan travel atau KBIH?', en: 'Do you serve travel-agency groups?' },
-    a: { id: 'Bisa. Hubungi kami lewat WhatsApp untuk mengatur jadwal rombongan, supaya prosesnya cepat dan tertib.', en: 'Yes. Message us on WhatsApp to schedule a group session for a quicker, organized visit.' },
+    a: { id: 'Bisa. Rombongan kami atur dalam satu jadwal. Untuk travel dan KBIH, kami juga membuka kerja sama — lihat bagian Kerja Sama di halaman ini untuk proposal lengkapnya.', en: 'Yes. Groups are scheduled together. For travel agencies we also offer a partnership — see the Partnership section on this page for the full proposal.' },
   },
   {
     q: { id: 'Berapa biayanya?', en: 'How much does it cost?' },
@@ -137,6 +156,9 @@ export default function Vaccine() {
                 <WhatsAppIcon size={18} /> {t({ id: 'Tanya via WhatsApp', en: 'Ask on WhatsApp' })}
               </a>
             </div>
+            <a href="#kerja-sama" className="partner-hint">
+              {t({ id: 'Untuk travel umroh & KBIH: lihat penawaran kerja sama', en: 'For Umrah travel agents: see our partnership offer' })} <span aria-hidden="true">→</span>
+            </a>
           </div>
           <div className="cert-card" aria-hidden="true">
             <span className="cert-eyebrow">International Certificate of Vaccination</span>
@@ -224,6 +246,56 @@ export default function Vaccine() {
         <div className="container faq-grid">
           <SectionHead label="FAQ" title={{ id: 'Yang sering ditanyakan soal vaksin Umroh & Haji.', en: 'Umrah & Hajj vaccine questions.' }} />
           <Faq items={FAQ} />
+        </div>
+      </section>
+
+      <section className="section alt" id="kerja-sama">
+        <div className="container partner-grid">
+          <div>
+            <SectionHead
+              label={{ id: 'Kerja Sama Travel Umroh & Haji', en: 'Partnership for Travel Agencies' }}
+              title={{ id: 'Mitra tour & travel? Mari bekerja sama.', en: 'Run a tour & travel agency? Let’s work together.' }}
+              text={{
+                id: 'Kami membuka kerja sama penyediaan vaksin meningitis & polio beserta ICV untuk jamaah Anda. Klinik mengurus layanannya, travel cukup koordinasi.',
+                en: 'We partner with agencies to provide meningitis & polio vaccines with ICV for your pilgrims. We handle the service; you just coordinate.',
+              }}
+            />
+            <div className="partner-benefits">
+              {PARTNER_BENEFITS.map((b, i) => (
+                <Reveal key={i} className="partner-benefit" delay={i * 60}>
+                  <h4>{t(b.title)}</h4>
+                  <p>{t(b.text)}</p>
+                </Reveal>
+              ))}
+            </div>
+            <div className="partner-actions">
+              <a className="btn btn-primary" href={PARTNERSHIP_PDF.url} target="_blank" rel="noreferrer">
+                {t({ id: 'Lihat Proposal', en: 'View Proposal' })}
+              </a>
+              <a className="btn btn-secondary" href={PARTNERSHIP_PDF.url} download>
+                {t({ id: 'Unduh PDF', en: 'Download PDF' })}
+              </a>
+              <a
+                className="btn-link"
+                href={waLink(
+                  t({
+                    id: 'Halo Baruga Medical Center, kami dari travel umroh ingin berdiskusi tentang kerja sama vaksin.\nNama travel:\nKota:',
+                    en: 'Hello Baruga Medical Center, we are an Umrah travel agency interested in the vaccine partnership.\nAgency name:\nCity:',
+                  }),
+                  CLINIC.partnershipWhatsapp,
+                )}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t({ id: 'Hubungi tim kerja sama', en: 'Contact our partnership team' })}
+              </a>
+            </div>
+            <p className="partner-meta">PDF · {PARTNERSHIP_PDF.pages} {t({ id: 'halaman', en: 'pages' })} · {PARTNERSHIP_PDF.size}</p>
+          </div>
+          <Reveal as="a" className="partner-cover" href={PARTNERSHIP_PDF.url} target="_blank" rel="noreferrer" delay={120}>
+            <img src="/img/proposal-cover.jpg" alt={t({ id: 'Sampul proposal kerja sama vaksin Umroh Baruga Medical Center', en: 'Cover of the Baruga Medical Center Umrah vaccine partnership proposal' })} width="960" height="540" loading="lazy" />
+            <span>{t({ id: 'Proposal Kerja Sama 2026', en: 'Partnership Proposal 2026' })} →</span>
+          </Reveal>
         </div>
       </section>
 
