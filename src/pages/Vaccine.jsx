@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { CLINIC, DOCTOR_GROUPS, HOURS, PARTNERSHIP_PDF, waLink } from '../config.js'
+import { CLINIC, DOCTOR_GROUPS, HOURS, waLink } from '../config.js'
 import { useLang } from '../i18n.jsx'
 import { Faq, Reveal, SectionHead, usePageTitle } from '../components/ui.jsx'
 import { WhatsAppIcon } from '../components/WhatsAppFloat.jsx'
@@ -111,7 +111,7 @@ export const FAQ = [
   },
   {
     q: { id: 'Bisa untuk rombongan travel atau KBIH?', en: 'Do you serve travel-agency groups?' },
-    a: { id: 'Bisa. Rombongan kami atur dalam satu jadwal. Untuk travel dan KBIH, kami juga membuka kerja sama — lihat bagian Kerja Sama di halaman ini untuk proposal lengkapnya.', en: 'Yes. Groups are scheduled together. For travel agencies we also offer a partnership — see the Partnership section on this page for the full proposal.' },
+    a: { id: 'Bisa. Rombongan kami atur dalam satu jadwal. Untuk travel dan KBIH, kami juga membuka kerja sama — hubungi kami lewat bagian Kerja Sama di halaman ini untuk mendapatkan proposalnya.', en: 'Yes. Groups are scheduled together. For travel agencies we also offer a partnership — request the proposal via the Partnership section on this page.' },
   },
   {
     q: { id: 'Berapa biayanya?', en: 'How much does it cost?' },
@@ -124,6 +124,14 @@ export default function Vaccine() {
   usePageTitle({ id: pageMeta('/vaksin-umroh').title, en: 'Umrah & Hajj Vaccines in Makassar + ICV | Baruga Medical Center' })
 
   const gp = DOCTOR_GROUPS.find((g) => g.service === 'gp')?.doctors[0]
+
+  const partnerWa = waLink(
+    t({
+      id: 'Halo Baruga Medical Center, kami dari travel umroh dan ingin meminta proposal kerja sama vaksin.\nNama travel:\nKota:',
+      en: 'Hello Baruga Medical Center, we are an Umrah travel agency and would like the vaccine partnership proposal.\nAgency name:\nCity:',
+    }),
+    CLINIC.partnershipWhatsapp,
+  )
 
   const waMessage = t({
     id: 'Halo Baruga Medical Center, saya mau jadwalkan vaksin Umroh/Haji (meningitis & polio) + ICV.\nNama:\nJumlah orang:\nRencana tanggal keberangkatan:',
@@ -269,32 +277,20 @@ export default function Vaccine() {
               ))}
             </div>
             <div className="partner-actions">
-              <a className="btn btn-primary" href={PARTNERSHIP_PDF.url} target="_blank" rel="noreferrer">
-                {t({ id: 'Lihat Proposal', en: 'View Proposal' })}
-              </a>
-              <a className="btn btn-secondary" href={PARTNERSHIP_PDF.url} download>
-                {t({ id: 'Unduh PDF', en: 'Download PDF' })}
-              </a>
-              <a
-                className="btn-link"
-                href={waLink(
-                  t({
-                    id: 'Halo Baruga Medical Center, kami dari travel umroh ingin berdiskusi tentang kerja sama vaksin.\nNama travel:\nKota:',
-                    en: 'Hello Baruga Medical Center, we are an Umrah travel agency interested in the vaccine partnership.\nAgency name:\nCity:',
-                  }),
-                  CLINIC.partnershipWhatsapp,
-                )}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t({ id: 'Hubungi tim kerja sama', en: 'Contact our partnership team' })}
+              <a className="btn btn-primary" href={partnerWa} target="_blank" rel="noreferrer">
+                <WhatsAppIcon size={18} /> {t({ id: 'Minta Proposal', en: 'Request the Proposal' })}
               </a>
             </div>
-            <p className="partner-meta">PDF · {PARTNERSHIP_PDF.pages} {t({ id: 'halaman', en: 'pages' })} · {PARTNERSHIP_PDF.size}</p>
+            <p className="partner-meta">
+              {t({
+                id: 'Proposal lengkap berisi harga, skema fee, dan alur kerja sama — kami kirim lewat WhatsApp.',
+                en: 'The full proposal covers pricing, the fee scheme, and the workflow — we’ll send it on WhatsApp.',
+              })}
+            </p>
           </div>
-          <Reveal as="a" className="partner-cover" href={PARTNERSHIP_PDF.url} target="_blank" rel="noreferrer" delay={120}>
+          <Reveal className="partner-cover" delay={120}>
             <img src="/img/proposal-cover.jpg" alt={t({ id: 'Sampul proposal kerja sama vaksin Umroh Baruga Medical Center', en: 'Cover of the Baruga Medical Center Umrah vaccine partnership proposal' })} width="960" height="540" loading="lazy" />
-            <span>{t({ id: 'Proposal Kerja Sama 2026', en: 'Partnership Proposal 2026' })} →</span>
+            <span>{t({ id: 'Proposal Kerja Sama 2026', en: 'Partnership Proposal 2026' })}</span>
           </Reveal>
         </div>
       </section>

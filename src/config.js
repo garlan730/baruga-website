@@ -52,9 +52,6 @@ export const BOOKING_API_URL = 'https://script.google.com/macros/s/AKfycbzuU4pkH
 export const waLink = (message = '', number = CLINIC.whatsapp) =>
   `https://wa.me/${number}${message ? `?text=${encodeURIComponent(message)}` : ''}`
 
-// Partnership proposal for travel agents, served from /public/files.
-export const PARTNERSHIP_PDF = { url: '/files/proposal-kerja-sama-vaksin-umroh-baruga.pdf', pages: 13, size: '1,4 MB' }
-
 // Doctors grouped by department, in display order. Photos live in /public/img/doctors;
 // a missing photo falls back to initials. `service` links a group to a booking option.
 export const DOCTOR_GROUPS = [
