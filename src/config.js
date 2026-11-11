@@ -32,7 +32,7 @@ export const PROMO = {
   end: '2026-11-22',
   service: 'ortho', // booking option the promo button preselects
   tag: { id: 'Promo Terbatas', en: 'Limited Offer' },
-  value: { id: 'Diskon 20%', en: '20% Off' },
+  value: { id: 'Diskon 10%', en: '10% Off' },
   title: { id: 'Perawatan Behel (Ortodonti)', en: 'Orthodontic Treatment (Braces)' },
   perk: { id: 'Plus konsultasi awal GRATIS untuk ortodonti & prostodonti.', en: 'Plus a FREE first consultation for orthodontics & prosthodontics.' },
   terms: { id: 'Syarat & ketentuan berlaku. Kuota terbatas.', en: 'Terms apply. Limited slots.' },
