@@ -29,7 +29,7 @@ export const HOURS = [
 // clinic date); set PROMO to null to hide it. Mirrors the campaign at promo.barugamedicalcenter.com.
 export const PROMO = {
   start: '2026-10-23',
-  end: '2026-11-22',
+  end: '2026-12-31',
   service: 'ortho', // booking option the promo button preselects
   tag: { id: 'Promo Terbatas', en: 'Limited Offer' },
   value: { id: 'Diskon 10%', en: '10% Off' },
