@@ -48,7 +48,7 @@ header img{height:88px}
 .kicker{font-size:24px;letter-spacing:.18em;text-transform:uppercase;color:var(--champ);margin-bottom:20px;display:flex;align-items:center;gap:16px}
 .kicker:before{content:"";width:0;height:2px;background:var(--gold);transition:width 1s .3s}
 .slide.on .kicker:before{width:56px}
-h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:112px;line-height:1.0;color:var(--ivory)}
+h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:100px;line-height:1.0;color:var(--ivory)}
 h1 .w{display:inline-block}
 h2{font-variant-numeric:lining-nums;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:80px;line-height:1.05;margin-bottom:40px}
 p.lead{font-size:34px;line-height:1.45;color:var(--beige);max-width:1100px;margin-top:32px}
@@ -59,11 +59,11 @@ p.lead{font-size:34px;line-height:1.45;color:var(--beige);max-width:1100px;margi
 .shine:after{content:"";position:absolute;top:0;bottom:0;width:180px;left:-220px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-18deg)}
 .slide.on .shine:after{animation:sweep 1.6s 2.2s ease-in-out}
 @keyframes sweep{to{left:120%}}
-.hello{position:absolute;right:0;top:40px;width:430px;height:430px;border-radius:50%;border:2px solid rgba(217,201,168,.25);display:flex;align-items:center;justify-content:center}
+.hello{position:absolute;right:0;top:50px;width:380px;height:380px;border-radius:50%;border:2px solid rgba(217,201,168,.25);display:flex;align-items:center;justify-content:center}
 .hello:before,.hello:after{content:"";position:absolute;inset:-34px;border-radius:50%;border:1px solid rgba(217,201,168,.14);animation:ring 6s ease-in-out infinite}
 .hello:after{inset:-74px;animation-delay:-3s}
 @keyframes ring{50%{transform:scale(1.05);opacity:.4}}
-.hello img{width:250px;opacity:.95}
+.hello img{width:186px;opacity:.95}
 
 /* Treatment slides with 3D clips */
 .tr{display:grid;grid-template-columns:1fr 740px;gap:80px;align-items:center;height:100%}
@@ -270,7 +270,13 @@ var team=[
 document.getElementById('team').innerHTML=team.map(function(d,i){return '<div class="doc a pop" style="--d:'+(0.55+i*0.14).toFixed(2)+'s"><img src="/img/doctors/'+d[2]+'.jpg" alt=""><div class="n">'+d[0]+'</div><div class="r">'+d[1]+'</div></div>'}).join('');
 
 // Logo symbol (left part of the white logo): faint in the corner and inside the welcome ring.
-(function(){var i=new Image();i.onload=function(){var c=document.createElement('canvas');c.width=286;c.height=i.naturalHeight;c.getContext('2d').drawImage(i,0,0);var u=c.toDataURL();document.getElementById('mark').src=u;document.getElementById('mark2').src=u};i.src='/img/logo-white.png'})();
+// Cropped to the symbol's own edges (it starts ~75 px into the image), so it sits centred in the ring.
+(function(){var i=new Image();i.onload=function(){
+  var w=i.naturalWidth,h=i.naturalHeight,c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d');x.drawImage(i,0,0);
+  var d=x.getImageData(0,0,w,h).data,x0=w,x1=-1,y0=h,y1=-1,gap=w;
+  for(var col=0;col<w;col++){var any=false;for(var r=0;r<h;r++){if(d[(r*w+col)*4+3]>20){any=true;if(r<y0)y0=r;if(r>y1)y1=r}}if(any){if(col<x0)x0=col;x1=col}else if(x1>=0){gap=col;break}}
+  var o=document.createElement('canvas');o.width=x1-x0+1;o.height=y1-y0+1;o.getContext('2d').drawImage(i,x0,y0,o.width,o.height,0,0,o.width,o.height);
+  var u=o.toDataURL();document.getElementById('mark').src=u;document.getElementById('mark2').src=u};i.src='/img/logo-white.png'})();
 
 // A few soft lights rising slowly in the background.
 (function(){var h='';for(var i=0;i<16;i++){var s=8+Math.random()*22;h+='<i class="dust" style="left:'+(Math.random()*1900).toFixed(0)+'px;width:'+s+'px;height:'+s+'px;animation-duration:'+(22+Math.random()*26).toFixed(1)+'s;animation-delay:-'+(Math.random()*40).toFixed(1)+'s"></i>'}document.getElementById('dust').innerHTML=h})();
@@ -297,7 +303,7 @@ n=+(new URLSearchParams(location.search).get('s')||0)%slides.length;
 show(n);
 
 // Reload every 6 hours to pick up changes, only if the site is reachable.
-setTimeout(function(){fetch(location.href,{cache:'no-store'}).then(function(r){if(r.ok)location.reload()})},6*3600*1000);
+setTimeout(function(){fetch(location.pathname,{cache:'no-store'}).then(function(r){if(r.ok)location.replace(location.pathname+'?v='+Date.now())})},6*3600*1000);
 </script>
 </body>
 </html>
