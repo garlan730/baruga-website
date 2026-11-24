@@ -174,7 +174,7 @@ footer{position:absolute;left:96px;right:96px;bottom:56px;display:flex;justify-c
           <li class="a left" style="--d:1.7s"><b>✓</b>Untuk anak, remaja, dan dewasa</li>
         </ul>
       </div>
-      <div class="frame" style="opacity:0"><div class="fglow"></div><video src="/video/orthodontics.mp4" poster="/video/orthodontics-poster.jpg" muted playsinline preload="auto" loop></video><div class="chip"><i></i>Animasi 3D · gigi dirapikan bertahap</div></div>
+      <div class="frame" style="opacity:0"><div class="fglow"></div><video data-src="/video/orthodontics.mp4" poster="/video/orthodontics-poster.jpg" muted playsinline preload="auto" loop></video><div class="chip"><i></i>Animasi 3D · gigi dirapikan bertahap</div></div>
     </div>
   </section>
 
@@ -192,7 +192,7 @@ footer{position:absolute;left:96px;right:96px;bottom:56px;display:flex;justify-c
           <li class="a left" style="--d:1.7s"><b>✓</b>Gigi tiruan lepasan &amp; cekat</li>
         </ul>
       </div>
-      <div class="frame" style="opacity:0"><div class="fglow"></div><video src="/video/prosthodontics.mp4" poster="/video/prosthodontics-poster.jpg" muted playsinline preload="auto" loop></video><div class="chip"><i></i>Animasi 3D · implan gigi</div></div>
+      <div class="frame" style="opacity:0"><div class="fglow"></div><video data-src="/video/prosthodontics.mp4" poster="/video/prosthodontics-poster.jpg" muted playsinline preload="auto" loop></video><div class="chip"><i></i>Animasi 3D · implan gigi</div></div>
     </div>
   </section>
 
@@ -292,8 +292,10 @@ slides.forEach(function(s){var v=s.querySelector('video');if(v)v.addEventListene
 function show(k){
   slides.forEach(function(s,j){
     var v=s.querySelector('video');
-    if(j===k){s.classList.remove('on');void s.offsetWidth;s.classList.add('on');if(v){try{v.currentTime=0}catch(e){}var p=v.play();if(p&&p.catch)p.catch(function(){})}}
-    else{s.classList.remove('on');if(v)v.pause()}
+    // Only the visible slide's clip holds a video file: the TV box has one hardware decoder,
+    // so the other clip is unloaded and shows its first-frame poster until its turn.
+    if(j===k){s.classList.remove('on');void s.offsetWidth;s.classList.add('on');if(v){v.src=v.dataset.src;v.load();var p=v.play();if(p&&p.catch)p.catch(function(){})}}
+    else{s.classList.remove('on');if(v&&v.getAttribute('src')){v.pause();v.removeAttribute('src');v.load()}}
   });
   [].forEach.call(dots.children,function(d,j){d.classList.toggle('on',j===k)});
   var ms=+slides[k].dataset.ms;
