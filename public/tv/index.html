@@ -174,7 +174,7 @@ footer{position:absolute;left:96px;right:96px;bottom:56px;display:flex;justify-c
           <li class="a left" style="--d:1.7s"><b>✓</b>Untuk anak, remaja, dan dewasa</li>
         </ul>
       </div>
-      <div class="frame" style="opacity:0"><div class="fglow"></div><video src="/video/orthodontics.mp4" muted playsinline preload="auto" loop></video><div class="chip"><i></i>Animasi 3D · gigi dirapikan bertahap</div></div>
+      <div class="frame" style="opacity:0"><div class="fglow"></div><video src="/video/orthodontics.mp4" poster="/video/orthodontics-poster.jpg" muted playsinline preload="auto" loop></video><div class="chip"><i></i>Animasi 3D · gigi dirapikan bertahap</div></div>
     </div>
   </section>
 
@@ -192,7 +192,7 @@ footer{position:absolute;left:96px;right:96px;bottom:56px;display:flex;justify-c
           <li class="a left" style="--d:1.7s"><b>✓</b>Gigi tiruan lepasan &amp; cekat</li>
         </ul>
       </div>
-      <div class="frame" style="opacity:0"><div class="fglow"></div><video src="/video/prosthodontics.mp4" muted playsinline preload="auto" loop></video><div class="chip"><i></i>Animasi 3D · implan gigi</div></div>
+      <div class="frame" style="opacity:0"><div class="fglow"></div><video src="/video/prosthodontics.mp4" poster="/video/prosthodontics-poster.jpg" muted playsinline preload="auto" loop></video><div class="chip"><i></i>Animasi 3D · implan gigi</div></div>
     </div>
   </section>
 
@@ -287,6 +287,8 @@ try{var q=qrcode(0,'M');q.addData('https://barugamedicalcenter.com/#contact');q.
 // Slideshow. Videos restart from the beginning each time their slide shows, and pause when it leaves.
 var slides=[].slice.call(document.querySelectorAll('.slide')),dots=document.getElementById('dots'),prog=document.getElementById('prog'),n=0,timer;
 dots.innerHTML=slides.map(function(){return '<i></i>'}).join('');
+// If a clip is still downloading when its slide appears, start it as soon as it can play.
+slides.forEach(function(s){var v=s.querySelector('video');if(v)v.addEventListener('canplay',function(){if(s.classList.contains('on')&&v.paused){var p=v.play();if(p&&p.catch)p.catch(function(){})}})});
 function show(k){
   slides.forEach(function(s,j){
     var v=s.querySelector('video');
