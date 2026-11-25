@@ -119,6 +119,36 @@ p.lead{font-size:34px;line-height:1.45;color:var(--beige);max-width:1100px;margi
 .qr p{font-size:24px;margin-top:20px;font-weight:600}
 .qr span{font-size:20px;color:var(--olive-dark)}
 
+/* Promo badge (top-right, every slide). Hidden automatically after PROMO_END. */
+.hr{display:flex;align-items:center;gap:36px}
+.promo{position:relative;overflow:hidden;display:flex;align-items:center;gap:18px;padding:12px 26px 12px 14px;border-radius:60px;background:linear-gradient(100deg,#e7d3a6,#cfb47e);color:#2c3008;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:glow 3s ease-in-out infinite}
+.promo .pct{width:92px;height:92px;border-radius:50%;background:#2c3008;color:#f1dfb6;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;font-weight:700}
+.promo .pct b{font-size:38px;letter-spacing:-.02em}
+.promo .pct small{font-size:14px;letter-spacing:.14em;margin-top:3px}
+.promo .tx b{display:block;font-size:26px;font-weight:700;line-height:1.15}
+.promo .tx span{font-size:18px;font-weight:600;opacity:.8}
+.promo:after{content:"";position:absolute;top:0;bottom:0;width:90px;left:-120px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-18deg);animation:sweep2 5s 1s ease-in-out infinite}
+@keyframes sweep2{0%{left:-120px}30%,100%{left:120%}}
+@keyframes glow{50%{box-shadow:0 10px 40px rgba(217,201,168,.45)}}
+
+/* Before / after slide */
+.ba{display:grid;grid-template-columns:1236px 1fr;gap:56px;align-items:start}
+.bawrap{position:relative;width:1236px;height:550px;border-radius:32px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45),0 0 0 2px rgba(217,201,168,.35);background:#1c1f05}
+.bawrap img.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.bawrap .after{position:absolute;inset:0;clip-path:inset(0 100% 0 0)}
+.bawrap .line{position:absolute;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--gold);box-shadow:0 0 18px rgba(217,201,168,.9);left:0;opacity:0}
+.bawrap .line i{position:absolute;top:50%;left:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:var(--gold);color:var(--deep);display:flex;align-items:center;justify-content:center;font-size:24px;font-style:normal;font-weight:700}
+.bachip{position:absolute;top:24px;padding:10px 22px;border-radius:30px;font-size:22px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.bachip.cb{left:24px;background:rgba(28,31,5,.8);color:var(--ivory);transition:opacity .4s}
+.bachip.ca{right:24px;background:var(--gold);color:var(--deep);opacity:0;transition:opacity .4s}
+.bamark{position:absolute;right:24px;bottom:22px;width:64px;opacity:.85}
+.baside h3{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:600;line-height:1.05;margin-bottom:18px}
+.baside p{font-size:24px;line-height:1.5;color:var(--champ)}
+.bacount{font-size:26px;color:var(--gold);font-weight:700;margin:26px 0 12px;letter-spacing:.08em}
+.badots{display:flex;gap:10px}
+.badots i{width:48px;height:6px;border-radius:3px;background:rgba(217,201,168,.25)}
+.badots i.on{background:var(--gold)}
+
 footer{position:absolute;left:96px;right:96px;bottom:56px;display:flex;justify-content:space-between;align-items:center;font-size:24px;color:var(--champ);z-index:2}
 .dots{display:flex;gap:12px}
 .dots i{width:12px;height:12px;border-radius:50%;background:rgba(201,184,163,.3);transition:all .6s}
@@ -134,7 +164,10 @@ footer{position:absolute;left:96px;right:96px;bottom:56px;display:flex;justify-c
 
   <header>
     <img src="/img/logo-white.png" alt="Baruga Medical Center">
-    <div class="clock"><div class="t" id="time">--:--</div><div class="d" id="date"></div></div>
+    <div class="hr">
+      <div class="promo" id="promo"><div class="pct"><b>10%</b><small>DISKON</small></div><div class="tx"><b>Perawatan Behel</b><span>Promo s.d. 31 Des 2026 · S&amp;K berlaku</span></div></div>
+      <div class="clock"><div class="t" id="time">--:--</div><div class="d" id="date"></div></div>
+    </div>
   </header>
 
   <!-- 1. Welcome -->
@@ -196,7 +229,29 @@ footer{position:absolute;left:96px;right:96px;bottom:56px;display:flex;justify-c
     </div>
   </section>
 
-  <!-- 5. GP & vaccines -->
+  <!-- 5. Before / after (orthodontic cases from promo.barugamedicalcenter.com) -->
+  <section class="slide" data-ms="22000" id="baSlide">
+    <div class="kicker a" style="--d:.2s">Hasil Perawatan</div>
+    <h2 class="a" style="--d:.35s;margin-bottom:28px">Sebelum &amp; sesudah perawatan ortodonti</h2>
+    <div class="ba">
+      <div class="bawrap a" style="--d:.5s">
+        <img class="ph" id="baBefore" alt="">
+        <div class="after" id="baAfterWrap"><img class="ph" id="baAfter" alt=""></div>
+        <div class="line" id="baLine"><i>⇆</i></div>
+        <span class="bachip cb" id="baChipB">Sebelum</span><span class="bachip ca" id="baChipA">Sesudah</span>
+        <img class="bamark" src="/tv/ba/mark.png" alt="">
+      </div>
+      <div class="baside">
+        <h3 class="a" style="--d:.7s">Senyum lebih rapi, gigitan lebih sehat</h3>
+        <p class="a" style="--d:.85s">Pasien ortodonti Baruga Medical Center, ditangani dokter gigi spesialis ortodonti.</p>
+        <div class="bacount a" style="--d:1s" id="baCount">KASUS 1 / 4</div>
+        <div class="badots a" style="--d:1.1s" id="baDots"><i></i><i></i><i></i><i></i></div>
+        <p class="a" style="--d:1.3s;margin-top:30px;font-size:20px">Hasil perawatan dapat berbeda pada setiap pasien.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. GP & vaccines -->
   <section class="slide" data-ms="15000">
     <div class="kicker a" style="--d:.2s">Poli Umum &amp; Vaksin</div>
     <h2 class="a" style="--d:.35s">Dokter umum dan vaksin umroh &amp; haji</h2>
@@ -210,14 +265,14 @@ footer{position:absolute;left:96px;right:96px;bottom:56px;display:flex;justify-c
     </div>
   </section>
 
-  <!-- 6. Team -->
+  <!-- 7. Team -->
   <section class="slide" data-ms="16000">
     <div class="kicker a" style="--d:.2s">Tim Dokter</div>
     <h2 class="a" style="--d:.35s">Dokter yang praktik di Baruga</h2>
     <div class="team" id="team"></div>
   </section>
 
-  <!-- 7. Hours & contact -->
+  <!-- 8. Hours & contact -->
   <section class="slide" data-ms="18000">
     <div class="kicker a" style="--d:.2s">Jam Praktik &amp; Kontak</div>
     <div class="info">
@@ -284,6 +339,30 @@ document.getElementById('team').innerHTML=team.map(function(d,i){return '<div cl
 // QR code to the booking section of the website.
 try{var q=qrcode(0,'M');q.addData('https://barugamedicalcenter.com/#contact');q.make();document.getElementById('qr').innerHTML=q.createSvgTag({margin:0,scalable:true})}catch(e){}
 
+// Promo badge: shown until the end of the orthodontic promo (same dates as promo.barugamedicalcenter.com).
+var PROMO_END='2026-12-31';
+(function(){var d=new Date(Date.now()+(8*60+new Date().getTimezoneOffset())*60000),iso=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+  if(iso>PROMO_END)document.getElementById('promo').style.display='none'})();
+
+// Before/after: 4 cases, each starts on "Sebelum", then a line sweeps across to reveal "Sesudah".
+var CASES=[3,6,1,2],baRun=0;
+CASES.forEach(function(n){['before','after'].forEach(function(k){new Image().src='/tv/ba/case-'+n+'-'+k+'.jpg'})});
+function playBA(){
+  var run=++baRun,el=function(id){return document.getElementById(id)},dots=el('baDots').children,i=0;
+  function one(){
+    if(run!==baRun)return;
+    var n=CASES[i];el('baBefore').src='/tv/ba/case-'+n+'-before.jpg';el('baAfter').src='/tv/ba/case-'+n+'-after.jpg';
+    el('baAfterWrap').style.clipPath='inset(0 100% 0 0)';el('baLine').style.opacity=0;el('baLine').style.left='0%';el('baChipA').style.opacity=0;el('baChipB').style.opacity=1;
+    el('baCount').textContent='KASUS '+(i+1)+' / '+CASES.length;[].forEach.call(dots,function(d,j){d.classList.toggle('on',j===i)});
+    var t0=performance.now()+1400,dur=1800;
+    (function f(t){if(run!==baRun)return;var p=Math.max(0,Math.min(1,(t-t0)/dur));p=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+      if(t>=t0){el('baLine').style.opacity=p<1?1:0;el('baLine').style.left=(p*100)+'%';el('baAfterWrap').style.clipPath='inset(0 '+(100-p*100)+'% 0 0)'}
+      if(p>=1){el('baChipA').style.opacity=1;el('baChipB').style.opacity=0}else requestAnimationFrame(f)})(performance.now());
+    i++;if(i<CASES.length)setTimeout(one,5200);
+  }
+  setTimeout(one,600);
+}
+
 // Slideshow. Videos restart from the beginning each time their slide shows, and pause when it leaves.
 var slides=[].slice.call(document.querySelectorAll('.slide')),dots=document.getElementById('dots'),prog=document.getElementById('prog'),n=0,timer;
 dots.innerHTML=slides.map(function(){return '<i></i>'}).join('');
@@ -297,6 +376,7 @@ function show(k){
     if(j===k){s.classList.remove('on');void s.offsetWidth;s.classList.add('on');if(v){v.src=v.dataset.src;v.load();var p=v.play();if(p&&p.catch)p.catch(function(){})}}
     else{s.classList.remove('on');if(v&&v.getAttribute('src')){v.pause();v.removeAttribute('src');v.load()}}
   });
+  if(slides[k].id==='baSlide')playBA();else baRun++;
   [].forEach.call(dots.children,function(d,j){d.classList.toggle('on',j===k)});
   var ms=+slides[k].dataset.ms;
   prog.style.transition='none';prog.style.width='0';void prog.offsetWidth;prog.style.transition='width '+ms+'ms linear';prog.style.width='1920px';
